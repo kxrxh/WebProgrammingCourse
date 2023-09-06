@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta
+      charset="UTF-8"
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Лабораторная работа #1</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+    />
+    <link rel="stylesheet" type="text/css" href="./styles/app.css" />
+    <link rel="stylesheet" type="text/css" href="./styles/inputs.css" />
+    <link rel="icon" type="image/png" href="./assets/favicon.png" />
+  </head>
+
+  <body>
+    <table>
+      <tr>
+        <td>
+          <header class="appbar">
+            <h2>Лабораторная работа #1</h2>
+            <div>
+              <h2>Пархоменко Кирилл P3212</h2>
+              <h2>Вариант: 2224</h2>
+            </div>
+          </header>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="app-body">
+            <div id="input-container">
+              <h1 id="inputs-title">Параметры</h1>
+              <div class="material-input-container">
+                <input
+                  type="text"
+                  value="0"
+                  class="material-input"
+                  required
+                  pattern="^[+-]?\d+(\.\d+)?$"
+                />
+                <label class="material-label">Значение X</label>
+              </div>
+              <div class="material-input-container">
+                <input
+                  type="text"
+                  value="0"
+                  class="material-input"
+                  required
+                  pattern="^[+-]?\d+(\.\d+)?$"
+                />
+                <label class="material-label">Значение Y</label>
+              </div>
+              <div class="material-input-container">
+                <input
+                  type="text"
+                  value="0"
+                  class="material-input"
+                  required
+                  pattern="^[+]?\d+(\.\d+)?$"
+                />
+                <label class="material-label">Значение R</label>
+              </div>
+              <button class="send-button">Отправить</button>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        </td>
+      </tr>
+    </table>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" />
+  <script src="./js/index.js" />
+</html>
