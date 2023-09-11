@@ -1,0 +1,81 @@
+@font-face {
+    font-family: 'SpongeBobFont';
+    src: url('../assets/SpongeboyRegular-gx2n6.otf');
+}
+
+body {
+    margin: 10px;
+    font-family: 'SpongeBobFont', serif;
+    background: url("../assets/background.jpg") no-repeat center center fixed;
+    background-size: cover;
+    text-shadow: -3px 3px #AEAD0D, -5px 5px #3B98BE;
+    color: #FFF56C;
+    background-color: #26b9c8;
+}
+
+#appbar {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    margin: -10px 0 20px -30px;
+}
+
+body,
+table {
+    margin: 10px;
+    padding: 0;
+    width: 100%;
+}
+
+#app-name {
+    font-size: 48px;
+}
+
+.sub-title {
+    font-size: 36px;
+}
+
+.material-label {
+    font-size: xx-large;
+}
+
+.result-table {
+    width: 70%;
+    height: 450px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    font-family: 'SpongeBobFont', serif;
+    text-shadow: -1px 1px #AEAD0D, -2px 2px #3B98BE;
+    font-size: 24px;
+}
+
+.table-container {
+    width: 100%;
+}
+
+.custom-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.custom-table th,
+.custom-table td {
+    text-align: center;
+    padding: 8px;
+}
+
+.td-left {
+    width: 40%;
+}
+
+.custom-table th:nth-child(1),
+.custom-table td:nth-child(1) {
+    width: 20%;
+}
+
+.custom-table th:nth-child(2),
+.custom-table td:nth-child(2) {
+    width: 10%;
+}

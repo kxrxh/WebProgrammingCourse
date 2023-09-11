@@ -1,13 +1,25 @@
-function validateForm() {
-  const form = document.forms[0];
-  const r = parseFloat(form["r"].value);
-  const x = parseFloat(form["x"].value);
-  const y = parseFloat(form["y"].value);
+const theme = new Audio("./assets/intro.mp3");
 
-  if (Number.isNaN(r) || Number.isNaN(x) || Number.isNaN(y) || r <= 0) {
-    alert("Please enter valid values.");
-    return false;
+function playTheme() {
+  if (!theme.paused && theme.duration > 0) {
+    theme.pause();
+    theme.currentTime = 0;
+    return;
   }
+  theme.play();
+}
+function playFail() {
+  const fail = new Audio("./assets/fail.mp3");
+  fail.play();
+}
 
-  return true;
+function playSad() {
+  const sad = new Audio("./assets/sad.mp3");
+  sad.currentTime = 0.3;
+  sad.play();
+}
+
+function playHit() {
+  const ohyeah = new Audio("./assets/ohyeah.mp3");
+  ohyeah.play();
 }
