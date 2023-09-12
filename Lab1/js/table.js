@@ -41,7 +41,6 @@ function sendDataToServer() {
         const data = JSON.parse(xhr.responseText);
         // Проверяем, что полученные данные валидны
         if (data.time !== undefined && data.result !== undefined) {
-          printDotOnGraph(x, y, data.result);
           const newRow = `<tr>
                 <td>${x}</td>
                 <td>${y}</td>

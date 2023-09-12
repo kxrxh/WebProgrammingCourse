@@ -28,4 +28,26 @@ function isValidInput($x, $y, $r): bool
         and in_array($r, [1, 2, 3, 4, 5]);
 }
 
+$tableData = [];
+
+// Save input values to cookies
+if (isValidInput($inputX, $inputY, $inputR)) {
+    $tableRow = [
+        "x" => $inputX,
+        "y" => $inputY,
+        "r" => $inputR,
+        "time" => $current_time,
+        "result" => isInsideShape($inputX, $inputY, $inputR) ? "hit" : "miss",
+    ];
+
+    // Check if the table data cookie already exists
+    $tableData = isset($_COOKIE['table_data']) ? json_decode($_COOKIE['table_data'], true) : [];
+
+    // Add the new row to the array
+    $tableData[] = $tableRow;
+
+    // Save the updated table data to a cookie
+    setcookie("table_data", json_encode($tableData), time() + 3600, "/");
+}
+
 echo json_encode(["time" => $current_time, "result" => isInsideShape($inputX, $inputY, $inputR) ? "hit" : "miss"]);

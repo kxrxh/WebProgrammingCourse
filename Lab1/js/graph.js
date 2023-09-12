@@ -70,7 +70,6 @@ function redrawGraph(r) {
   ctx.lineTo(w / 2 + hatchGap * 2, h / 2);
   ctx.fill();
 
-
   ctx.strokeStyle = "#0457A0";
   ctx.stroke();
   ctx.closePath();

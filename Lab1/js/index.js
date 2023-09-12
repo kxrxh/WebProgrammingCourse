@@ -13,27 +13,53 @@ function playFail() {
   fail.play();
 }
 
-function playSad() {
-  const sad = new Audio("./assets/sad.mp3");
-  sad.currentTime = 0.3;
-  sad.play();
-}
-
 function playHit() {
   const ohyeah = new Audio("./assets/ohyeah.mp3");
   ohyeah.play();
 }
 
-function load() {
-  const discord = new Audio("./assets/discord-sounds.mp3");
-  discord.play();
-}
-document.addEventListener('keypress', (e) => {
-  var name = e.key;
-  if (name == "f") {
-    if (document.getElementById("appbar").style.fontFamily == "serif") {
-      document.getElementById("appbar").style.fontFamily = "SpongeBobFont";
-    } else
+document.addEventListener(
+  "keypress",
+  (e) => {
+    var name = e.key;
+    if (name == "f") {
+      if (document.getElementById("appbar").style.fontFamily == "serif") {
+        document.getElementById("appbar").style.fontFamily = "SpongeBobFont";
+        return;
+      }
       document.getElementById("appbar").style.fontFamily = "serif";
-  }
-}, false)
+    }
+  },
+  false
+);
+
+function loadTableData() {
+  fetch("./php/init.php")
+    .then((response) => response.text())
+    .then((data) => {
+      console.log(data);
+      const tbody = document.querySelector(".result-table tbody");
+      tbody.innerHTML = data;
+    })
+    .catch((error) => console.error("Error loading table data:", error));
+}
+
+// Call the function when the page loads
+window.addEventListener("load", loadTableData);
+
+function clearTable() {
+  const tbody = document.querySelector(".result-table tbody");
+  tbody.innerHTML = ""; // Clear the table content
+
+  // Add an additional AJAX request to clear the cookies
+  fetch("../php/clear.php")
+    .then((response) => {
+      // Check if the cookies were successfully cleared
+      if (document.cookie.indexOf("table_data=") === -1) {
+        console.log("Cookies cleared successfully.");
+      } else {
+        console.error("Failed to clear cookies.");
+      }
+    })
+    .catch((error) => console.error("Error clearing cookies:", error));
+}
