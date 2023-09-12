@@ -23,3 +23,17 @@ function playHit() {
   const ohyeah = new Audio("./assets/ohyeah.mp3");
   ohyeah.play();
 }
+
+function load() {
+  const discord = new Audio("./assets/discord-sounds.mp3");
+  discord.play();
+}
+document.addEventListener('keypress', (e) => {
+  var name = e.key;
+  if (name == "f") {
+    if (document.getElementById("appbar").style.fontFamily == "serif") {
+      document.getElementById("appbar").style.fontFamily = "SpongeBobFont";
+    } else
+      document.getElementById("appbar").style.fontFamily = "serif";
+  }
+}, false)
