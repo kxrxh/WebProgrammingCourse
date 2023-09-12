@@ -52,7 +52,7 @@ function clearTable() {
   tbody.innerHTML = ""; // Clear the table content
 
   // Add an additional AJAX request to clear the cookies
-  fetch("../php/clear.php")
+  fetch("./php/clear.php")
     .then((response) => {
       // Check if the cookies were successfully cleared
       if (document.cookie.indexOf("table_data=") === -1) {
