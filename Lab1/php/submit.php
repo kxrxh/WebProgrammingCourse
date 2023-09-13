@@ -32,15 +32,16 @@ $tableData = [];
 
 // Save input values to cookies
 if (isValidInput($inputX, $inputY, $inputR)) {
+    $exec_time =  round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 5)." ms";
     $tableRow = [
         "x" => $inputX,
         "y" => $inputY,
         "r" => $inputR,
         "time" => $current_time,
+        "exec_time" => $current_time,
         "result" => isInsideShape($inputX, $inputY, $inputR) ? "hit" : "miss",
     ];
 
-    $exec_time =  round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 5)." ms";
     // Check if the table data cookie already exists
     $tableData = isset($_COOKIE['table_data']) ? json_decode($_COOKIE['table_data'], true) : [];
 

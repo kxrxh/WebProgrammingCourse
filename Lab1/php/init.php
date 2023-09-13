@@ -7,6 +7,7 @@ foreach ($tableData as $row) {
     echo '<td>' . $row['y'] . '</td>';
     echo '<td>' . $row['r'] . '</td>';
     echo '<td>' . $row['time'] . '</td>';
+    echo '<td>' . $row['exec_time'] . '</td>';
     echo '<td class="' . $row['result'] . '">' . $row['result'] . '</td>';
     echo '</tr>';
 }
