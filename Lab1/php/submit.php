@@ -40,6 +40,7 @@ if (isValidInput($inputX, $inputY, $inputR)) {
         "result" => isInsideShape($inputX, $inputY, $inputR) ? "hit" : "miss",
     ];
 
+    $exec_time =  round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 5)." ms";
     // Check if the table data cookie already exists
     $tableData = isset($_COOKIE['table_data']) ? json_decode($_COOKIE['table_data'], true) : [];
 
@@ -50,4 +51,4 @@ if (isValidInput($inputX, $inputY, $inputR)) {
     setcookie("table_data", json_encode($tableData), time() + 3600, "/");
 }
 
-echo json_encode(["time" => $current_time, "result" => isInsideShape($inputX, $inputY, $inputR) ? "hit" : "miss"]);
+echo json_encode(["time" => $current_time, "result" => isInsideShape($inputX, $inputY, $inputR) ? "hit" : "miss", "exec_time" => $exec_time]);

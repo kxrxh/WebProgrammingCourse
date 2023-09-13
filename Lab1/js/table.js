@@ -46,6 +46,7 @@ function sendDataToServer() {
                 <td>${y}</td>
                 <td>${r}</td>
                 <td>${data.time}</td>
+                <td>${data.exec_time}</td>
                 <td class='${data.result}'>${data.result}</td>
               </tr>`;
           const tbody = document.querySelector(".result-table tbody");
