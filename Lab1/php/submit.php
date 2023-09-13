@@ -39,7 +39,7 @@ if (isValidInput($inputX, $inputY, $inputR)) {
         "y" => $inputY,
         "r" => $inputR,
         "time" => $current_time,
-        "exec_time" => $current_time,
+        "exec_time" => $exec_time,
         "result" => isInsideShape($inputX, $inputY, $inputR) ? "hit" : "miss",
     ];
 
