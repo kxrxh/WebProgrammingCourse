@@ -30,9 +30,10 @@ function isValidInput($x, $y, $r): bool
 
 $tableData = [];
 
+
+$exec_time =  round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 5)." ms";
 // Save input values to cookies
 if (isValidInput($inputX, $inputY, $inputR)) {
-    $exec_time =  round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 5)." ms";
     $tableRow = [
         "x" => $inputX,
         "y" => $inputY,
