@@ -44,7 +44,7 @@
 .form_radio_group label {
   display: grid;
   cursor: pointer;
-  padding: 0px 15px;
+  padding: 0px 1%;
   line-height: 200%;
   user-select: none;
   color: #fff;
@@ -103,6 +103,10 @@ button.spongebob-button:hover {
   transition: width 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
+.text-input::placeholder {
+  opacity: 0.7;
+}
+
 .text-input:focus {
   outline: none;
 }
@@ -110,4 +114,10 @@ button.spongebob-button:hover {
 .text-input:valid {
   text-shadow: -3px 3px #AEAD0D;
   color: #FFF56C;
+}
+
+
+button.spongebob-button::before {
+  content: "🧽";
+  margin-right: 5px;
 }
