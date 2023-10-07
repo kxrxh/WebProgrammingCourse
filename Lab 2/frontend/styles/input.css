@@ -1,0 +1,117 @@
+@keyframes jelly {
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.2, 0.9);
+  }
+
+  50% {
+    transform: scale(0.9, 1.2);
+  }
+
+  75% {
+    transform: scale(1.2, 0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.form_radio_group {
+  display: grid;
+  grid-template-columns: repeat(3, 0.2fr);
+  overflow: hidden;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#r-value-picker {
+  grid-template-columns: repeat(5, 0.1fr);
+
+}
+
+.form_radio_group-item {
+  display: grid;
+}
+
+.form_radio_group input[type=radio] {
+  display: none;
+}
+
+.form_radio_group label {
+  display: grid;
+  cursor: pointer;
+  padding: 0px 1%;
+  line-height: 200%;
+  user-select: none;
+  color: #fff;
+  text-shadow: -2px 2px #26B9C8, -4px 4px #0457A0;
+  transition: transform 0.2s;
+}
+
+
+.form_radio_group input[type=radio]:checked+label {
+  animation: jelly 1s ease infinite;
+  text-shadow: -3px 3px #AEAD0D;
+  color: #FFF56C;
+  /* Add an animation for the active phase */
+}
+
+.form_radio_group label:hover {
+  transform: scale(1.1);
+}
+
+/* BUTTON */
+button.spongebob-button {
+  font-family: 'SpongeBobFont', serif;
+  font-size: 30px;
+  background-color: #0457A0;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  padding: 5px 10px;
+  transition: transform 0.2s;
+}
+
+
+button.spongebob-button:active {
+  color: #FFF56C;
+}
+
+button.spongebob-button:hover {
+  transform: scale(1.05);
+}
+
+/* TEXT INPUT */
+
+.text-input {
+  margin-left: 50px;
+  font-size: xx-large;
+  font-family: 'SpongeBobFont', serif;
+  background: none;
+  cursor: pointer;
+  border: none;
+  color: #fff;
+  text-shadow: -2px 2px #26B9C8, -4px 4px #0457A0;
+  width: 100%;
+  transition: width 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.text-input::placeholder {
+  opacity: 0.7;
+}
+
+.text-input:focus {
+  outline: none;
+}
+
+.text-input:valid {
+  text-shadow: -3px 3px #AEAD0D;
+  color: #FFF56C;
+}
