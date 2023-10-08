@@ -109,15 +109,3 @@ function redrawGraph(r) {
 
 // draw graph with standard label
 redrawGraph(rValue);
-
-function drawDot(x, y, color) {
-    redrawGraph(rValue);
-    ctx.fillStyle = color;
-    let adjustedX = w / 2 + x * hatchGap * (2 / rValue) - 3;
-    let adjustedY = h / 2 - y * hatchGap * (2 / rValue) - 3;
-    ctx.fillRect(adjustedX, adjustedY, 6, 6);
-  }
-  
-  // Example usage:
-  // To draw a red dot at coordinates (1, 2)
-  drawDot(0, 0, "#fff");

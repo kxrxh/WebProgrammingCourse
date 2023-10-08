@@ -9,5 +9,5 @@ import lombok.Getter;
 @Getter
 public class AreaCheckRequest {
     private Coordinates coordinates;
-    private String currentTime;
+    private Long currentTime;
 }

@@ -2,6 +2,8 @@ package com.github.kxrxh.web.lab2.beans;
 
 import java.util.Optional;
 
+import com.github.kxrxh.web.lab2.utils.Validator;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,11 +27,10 @@ public class Coordinates {
      *         successful,
      *         otherwise an empty Optional
      */
-    public static Optional<Coordinates> parse(String x, String y, String r) {
-        try {
-            return Optional.of(new Coordinates(Float.parseFloat(x), Double.parseDouble(y), Float.parseFloat(r)));
-        } catch (NumberFormatException e) {
+    public static Optional<Coordinates> parse(Float x, Double y, Float r) {
+        if (!Validator.validateCoordinates(x, y, r)) {
             return Optional.empty();
         }
+        return Optional.of(new Coordinates(x, y, r));
     }
 }

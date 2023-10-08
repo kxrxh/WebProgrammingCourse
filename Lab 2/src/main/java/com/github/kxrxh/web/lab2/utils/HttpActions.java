@@ -2,7 +2,7 @@ package com.github.kxrxh.web.lab2.utils;
 
 import java.io.IOException;
 
-import com.github.kxrxh.web.lab2.beans.HttpResponse;
+import com.github.kxrxh.web.lab2.dto.HttpResponse;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

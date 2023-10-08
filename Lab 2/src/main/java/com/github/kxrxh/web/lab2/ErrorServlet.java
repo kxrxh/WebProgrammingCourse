@@ -2,7 +2,8 @@ package com.github.kxrxh.web.lab2;
 
 import java.io.IOException;
 
-import com.github.kxrxh.web.lab2.beans.HttpResponse;
+import com.github.kxrxh.web.lab2.dto.HttpResponse;
+import com.google.gson.Gson;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,14 +17,13 @@ public class ErrorServlet extends HttpServlet {
         doPost(req, resp);
     }
 
-protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-    HttpResponse httpResponse = (HttpResponse) req.getAttribute("ERROR");
-    resp.setStatus(httpResponse.getStatusCode());
-    try {
-        String content = httpResponse.getContent();
-        resp.getWriter().println(content);
-    } catch (IOException e) {
-        e.printStackTrace();
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        HttpResponse httpResponse = (HttpResponse) req.getAttribute("ERROR");
+        resp.setStatus(httpResponse.getStatusCode());
+        try {
+            resp.getWriter().write(new Gson().toJson(httpResponse));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-}
 }

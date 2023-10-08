@@ -1,4 +1,4 @@
-package com.github.kxrxh.web.lab2.beans;
+package com.github.kxrxh.web.lab2.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HttpResponse {
-    private int statusCode;
-    private String content;
+    protected int statusCode;
+    protected String content;
 }

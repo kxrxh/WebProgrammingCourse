@@ -6,6 +6,7 @@ import com.github.kxrxh.web.lab2.beans.Coordinates;
 import com.github.kxrxh.web.lab2.beans.Storage;
 import com.github.kxrxh.web.lab2.beans.TableRow;
 import com.github.kxrxh.web.lab2.dto.AreaCheckRequest;
+import com.github.kxrxh.web.lab2.dto.HttpNewRowResponse;
 import com.github.kxrxh.web.lab2.utils.HttpActions;
 import com.google.gson.Gson;
 
@@ -18,7 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AreaCheckServlet extends HttpServlet {
 
     /**
-     * This method is called when a GET request is received. It handles the request
+     * This method is called when a POST request is received. It handles the request
      * by checking the validity
      * of the coordinates and the current time provided in the request body. If the
      * coordinates or the current
@@ -34,7 +35,7 @@ public class AreaCheckServlet extends HttpServlet {
      * @param resp the HttpServletResponse object representing the outgoing response
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         AreaCheckRequest body = (AreaCheckRequest) req.getAttribute("ac_request");
         if (body.getCoordinates() == null) {
             HttpActions.badRequest(this, req, resp, "Invalid coordinates.");
@@ -47,20 +48,19 @@ public class AreaCheckServlet extends HttpServlet {
         }
         Coordinates coordinates = body.getCoordinates();
 
-        long startTime = Long.parseLong(body.getCurrentTime());
-        double executionTime = (System.currentTimeMillis() - startTime) / 1000000.;
-
         Storage storage = (Storage) getServletContext().getAttribute("storage");
         if (storage == null)
             storage = new Storage();
 
-        TableRow row = new TableRow(coordinates, body.getCurrentTime(), executionTime, isHit(coordinates));
+        TableRow row = new TableRow(coordinates, body.getCurrentTime(), isHit(coordinates));
         storage.addTableRow(row);
-        
+
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         try {
-            resp.getWriter().write(new Gson().toJson(row));
+            resp.getWriter().write(
+                    new Gson().toJson(new HttpNewRowResponse(HttpServletResponse.SC_OK, row.toHtmlTable(),
+                            row.getHitStatus() == "Hit")));
         } catch (IOException e) {
             // Hope this won't happen
             e.printStackTrace();
@@ -115,11 +115,5 @@ public class AreaCheckServlet extends HttpServlet {
         boolean isFourthQuadrant = coordinates.getX() <= 0 && coordinates.getY() >= 0;
         return isFourthQuadrant && coordinates.getX() <= -coordinates.getR()
                 && coordinates.getY() <= (coordinates.getR() / 2);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        resp.setContentType("text/html");
-        HttpActions.error(this, req, resp, HttpServletResponse.SC_NOT_FOUND, "<h1>Not found!</h1>");
     }
 }
