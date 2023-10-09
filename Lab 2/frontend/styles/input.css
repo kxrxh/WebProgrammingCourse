@@ -37,7 +37,7 @@
   display: grid;
 }
 
-.form_radio_group input[type=radio] {
+.form_radio_group input[type=checkbox] {
   display: none;
 }
 
@@ -53,7 +53,7 @@
 }
 
 
-.form_radio_group input[type=radio]:checked+label {
+.form_radio_group input[type=checkbox]:checked+label {
   animation: jelly 1s ease infinite;
   text-shadow: -3px 3px #AEAD0D;
   color: #FFF56C;
