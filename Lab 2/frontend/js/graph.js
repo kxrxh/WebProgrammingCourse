@@ -109,11 +109,88 @@ function redrawGraph(r) {
 // draw graph with standard label
 redrawGraph(rValue);
 
+const R = hatchGap * 2;
 
-function drawPoint(x, y) {
+/**
+ * Checks if a point is in the shaded area.
+ *
+ * @param {number} x - The x-coordinate of the point.
+ * @param {number} y - The y-coordinate of the point.
+ * @return {boolean} Returns true if the point is in the shaded area, otherwise false.
+ */
+function isPointInShadedArea(x, y) {
+  const isFirstQuadrant = x >= 0 && y >= 0;
+  const isSecondQuadrant = x >= 0 && y <= 0;
+  const isFourthQuadrant = x <= 0 && y >= 0;
+
+  const isHitCircle = isFirstQuadrant && (x ** 2 + y ** 2 <= R ** 2 / 4);
+
+  const isHitTriangle = isSecondQuadrant && isPointInTriangle(x, y);
+
+  const isHitRectangle = isFourthQuadrant && x >= -R && y <= (R / 2);
+
+  return isHitCircle || isHitRectangle || isHitTriangle;
+}
+
+function isPointInTriangle(x, y) {
+  const denom = (-hatchGap) * (-R) + (R) * 0;
+  const alpha = ((-hatchGap) * (x - 0) + (R) * (y - (-R / 2))) / denom;
+
+  return alpha >= 0 && alpha <= 1;
+}
+
+canvas.addEventListener("click", function (event) {
+  const rInputs = document.querySelectorAll("input[name='r']");
+  let r = null;
+  for (let i = 0; i < rInputs.length; i++) {
+    if (rInputs[i].checked) {
+      r = parseFloat(rInputs[i].value);
+      break;
+    }
+  }
+
+  if (r === null) {
+    alert("Please select a value for r.");
+    return;
+  }
+  const [x, y] = convertArgs(event.clientX, event.clientY);
+  console.log("(X,Y):", x, -y);
+  const isInShadedArea = isPointInShadedArea(x, -y);
+  drawPoint(x, y, (isInShadedArea ? "#FFF56C95" : "#00000080"));
+});
+
+/**
+ * Converts the given coordinates on the canvas to relative coordinates.
+ *
+ * @param {number} iX - The x-coordinate on the canvas.
+ * @param {number} iY - The y-coordinate on the canvas.
+ * @return {Array} An array containing the converted x and y coordinates.
+ */
+function convertArgs(iX, iY) {
+  const rect = canvas.getBoundingClientRect();
+  const x = iX - rect.left - w / 2;
+  const y = iY - rect.top - h / 2;
+  return [x, y];
+}
+
+/**
+ * Draws a point on the canvas.
+ *
+ * @param {number} x - The x coordinate of the point.
+ * @param {number} y - The y coordinate of the point.
+ */
+function drawPoint(x, y, color) {
+  playSplat();
   ctx.beginPath();
-  ctx.arc(x, y, 5, 0, 2 * Math.PI); // Рисуем круг с радиусом 5
-  ctx.fillStyle = "red"; // Цвет точки (в данном случае, красный)
-  ctx.fill(); // Заполняем круг цветом
+  ctx.arc(w / 2 + x, h / 2 + y, 5, 0, 2 * Math.PI);
+
+  ctx.fillStyle = color
+  ctx.fill();
   ctx.closePath();
+}
+
+function playSplat() {
+  const splat = new Audio("./assets/splat.mp3");
+  splat.volume = 0.5;
+  splat.play();
 }
