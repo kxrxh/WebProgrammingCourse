@@ -5,7 +5,7 @@ canvas.height = canvas.width;
 let w = canvas.width,
   h = canvas.height;
 
-const hatchWidth = 20 / 2;
+const hatchWidth = 25 / 2;
 const hatchGap = 56;
 
 let rValue = "R";
@@ -61,12 +61,11 @@ function redrawGraph(r) {
   ctx.beginPath();
 
   ctx.lineTo(w / 2 + hatchGap * 2, h / 2);
-  ctx.arc(w / 2, h / 2, hatchGap * 2, 0, (-1 / 2) * Math.PI, true);
-  ctx.lineTo(w / 2, h / 2 - hatchGap * 2);
+  ctx.arc(w / 2, h / 2, hatchGap, 0, (-1 / 2) * Math.PI, true);
+  ctx.lineTo(w / 2 - hatchGap * 2, h / 2 - hatchGap);
+  ctx.lineTo(w / 2 - hatchGap * 2, h / 2);
   ctx.lineTo(w / 2, h / 2);
-  ctx.lineTo(w / 2 - hatchGap, h / 2);
-  ctx.lineTo(w / 2 - hatchGap, h / 2 + hatchGap * 2);
-  ctx.lineTo(w / 2, h / 2 + hatchGap * 2);
+  ctx.lineTo(w / 2, h / 2 + hatchGap);
   ctx.lineTo(w / 2 + hatchGap * 2, h / 2);
   ctx.fill();
 
@@ -110,11 +109,11 @@ function redrawGraph(r) {
 // draw graph with standard label
 redrawGraph(rValue);
 
-function printDotOnGraph(xCenter, yCenter, isHit) {
-  redrawGraph(rValue);
-  ctx.fillStyle = isHit == "hit" ? "#00ff00" : "#ff0000";
-  // ctx.fillStyle = "#99226f";
-  let x = w / 2 + xCenter * hatchGap * (2 / rValue) - 3,
-    y = h / 2 - yCenter * hatchGap * (2 / rValue) - 3;
-  ctx.fillRect(x, y, 6, 6);
+
+function drawPoint(x, y) {
+  ctx.beginPath();
+  ctx.arc(x, y, 5, 0, 2 * Math.PI); // Рисуем круг с радиусом 5
+  ctx.fillStyle = "red"; // Цвет точки (в данном случае, красный)
+  ctx.fill(); // Заполняем круг цветом
+  ctx.closePath();
 }

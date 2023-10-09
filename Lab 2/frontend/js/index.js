@@ -19,6 +19,7 @@ function playHit() {
 }
 
 
+
 function sendDataToServer() {
     const xInputs = document.querySelectorAll("input[name='x']");
     let x = null;

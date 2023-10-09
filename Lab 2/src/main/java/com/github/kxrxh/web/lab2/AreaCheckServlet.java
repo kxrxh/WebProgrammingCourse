@@ -101,8 +101,11 @@ public class AreaCheckServlet extends HttpServlet {
         var x = coordinates.getX();
         var y = coordinates.getY();
         var R = coordinates.getR();
-        boolean isSecondQuadrant = x >= 0 && y <= 0;
-        return isSecondQuadrant && x <= R && y >= -R / 2 && (-x + R >= 0) && (2 * x + y >= 0) && (-2 * x - y >= 0);
+        boolean isInSecondQuadrant = x >= 0 && y <= 0;
+        float denom = (-R / 2) * (-R) + (R) * 0;
+        double alpha = ((-R / 2) * (x - 0) + (R) * (y - (-R / 2))) / denom;
+
+        return isInSecondQuadrant && alpha >= 0 && alpha <= 1;
     }
 
     /**
@@ -113,7 +116,7 @@ public class AreaCheckServlet extends HttpServlet {
      */
     private boolean hitFourthQuadrant(Coordinates coordinates) {
         boolean isFourthQuadrant = coordinates.getX() <= 0 && coordinates.getY() >= 0;
-        return isFourthQuadrant && coordinates.getX() <= -coordinates.getR()
+        return isFourthQuadrant && coordinates.getX() >= -coordinates.getR()
                 && coordinates.getY() <= (coordinates.getR() / 2);
     }
 }

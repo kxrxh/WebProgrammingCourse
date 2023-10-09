@@ -104,7 +104,7 @@
                     </div>
                 </td>
                 <td class="td-left">
-                    <canvas id="graph"></canvas>
+                    <canvas id="graph" width="400" height="400"></canvas>
                     <div class="result-table">
                         <table class="custom-table">
                             <thead>
