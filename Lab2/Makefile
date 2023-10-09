@@ -8,5 +8,5 @@ build:
 clean:
 	mvn clean
 
-deploy:
+helios: build
 	mv target/*.war ~/wildfly-28*/standalone/deployments/
