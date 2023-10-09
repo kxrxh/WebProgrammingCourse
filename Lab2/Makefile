@@ -8,3 +8,5 @@ build:
 clean:
 	mvn clean
 
+deploy:
+	mv target/*.war ~/wildfly-28*/standalone/deployments/
