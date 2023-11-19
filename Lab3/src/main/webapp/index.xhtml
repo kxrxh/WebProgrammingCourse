@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Lab3</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+<h:body>
+    <h:form id="myForm">
+
+        <div id="grid" class="panelGridCenter">
+            <div class="row">
+                <div class="label">
+                    <h:outputText value="X Value:" />
+                </div>
+                <div class="value">
+                    <p:inputText id="xInput" value="#{inputBean.valueOfX}" style="width: 100%" />
+                    <p:slider for="xInput" minValue="-5" maxValue="5" step="0.1" style="width: 100%"
+                        defaultValue="0.0" />
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="label" style="text-align: left;">
+                    <h:outputText value="Y Value:" />
+                </div>
+                <div class="value">
+                    <p:inputText id="yInput" value="#{inputBean.valueOfY}" style="width: 100%"
+                        placeholder="Enter a value between -5 and 5"
+                        validatorMessage="Y Value must be a valid number between -5 and 5">
+                        <f:validateDoubleRange minimum="-5.0" maximum="5.0" />
+                    </p:inputText>
+                    <p:message for="yInput" />
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="label">
+                    <h:outputText value="R Value:" />
+                </div>
+                <div class="value">
+                    <p:selectOneRadio id="rRadio" value="#{inputBean.valueOfR}"
+                        onchange="handleRadioChange(this.value)">
+                        <f:selectItem itemValue="1" itemLabel="1" />
+                        <f:selectItem itemValue="2" itemLabel="2" />
+                        <f:selectItem itemValue="3" itemLabel="3" />
+                        <f:selectItem itemValue="4" itemLabel="4" />
+                        <f:selectItem itemValue="5" itemLabel="5" />
+                    </p:selectOneRadio>
+                </div>
+            </div>
+            <div style="width: 100%; display: flex; align-items: center;">
+                <div class="button">
+                    <p:commandButton value="Submit" action="#{inputBean.send}" style="width: 100%;"
+                        oncomplete="handleValidationResult(args)" />
+                </div>
+                <div class="button">
+                    <p:commandButton value="Clear" action="#{inputBean.clear}" style="width: 100%;" />
+                </div>
+            </div>
+            <!-- Canvas -->
+            <div style="display: flex; align-items: center; justify-content: center;" class="row">
+                <canvas id="myCanvas" width="400" height="200" class="canvas"></canvas>
+            </div>
+            <!-- Table -->
+            <h:dataTable value="#{yourBean.yourList}" var="item" style="width: 100%; text-align: center;">
+                <h:column>
+                    <f:facet name="header">X</f:facet>
+                    #{item.x}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Y</f:facet>
+                    #{item.y}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">R</f:facet>
+                    #{item.r}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">STATUS</f:facet>
+                    #{item.status}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">TIME</f:facet>
+                    #{item.time}
+                </h:column>
+            </h:dataTable>
+        </div>
+    </h:form>
+</h:body>
+
+
+<h:outputScript library="js" name="graph.js" />
+
+<script type="text/javascript">
+    function handleRadioChange(newValue) {
+        redrawGraph(newValue - 0)
+    }
+</script>
+
+<script type="text/javascript">
+    function handleValidationResult(args) {
+        // Check if there are any validation errors
+        if (args.validationFailed) {
+            alert("ERROR: Probably an invalid value entered.");
+        }
+    }
+</script>
+
+</html>
