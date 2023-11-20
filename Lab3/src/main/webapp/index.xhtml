@@ -4,6 +4,7 @@
 <h:head>
     <title>Lab3</title>
     <h:outputStylesheet library="css" name="styles.css" />
+    <h:outputScript library="js" name="globalVariables.js" />
 </h:head>
 <h:body>
     <h:form id="myForm">
@@ -41,65 +42,81 @@
                     <h:outputText value="R Value:" />
                 </div>
                 <div class="value">
-                    <p:selectOneRadio id="rRadio" value="#{inputBean.valueOfR}"
-                        onchange="handleRadioChange(this.value)">
+                    <p:remoteCommand name="getCurrentRExecute" action="#{inputBean.getCurrentRExecute}" />
+                    <p:remoteCommand name="getPointDataExecute" action="#{tableBean.getPointDataExecute}" />
+                    <p:selectOneRadio id="rRadio" value="#{inputBean.valueOfR}" onchange="redrawGraphCall(this.value)">
                         <f:selectItem itemValue="1" itemLabel="1" />
                         <f:selectItem itemValue="2" itemLabel="2" />
                         <f:selectItem itemValue="3" itemLabel="3" />
                         <f:selectItem itemValue="4" itemLabel="4" />
                         <f:selectItem itemValue="5" itemLabel="5" />
+
+                        <p:ajax update="table" listener="#{tableBean.handleRadioChange}" />
                     </p:selectOneRadio>
+
                 </div>
             </div>
             <div style="width: 100%; display: flex; align-items: center;">
                 <div class="button">
                     <p:commandButton value="Submit" action="#{inputBean.send}" style="width: 100%;"
-                        oncomplete="handleValidationResult(args)" />
+                        oncomplete="redrawGraphCall(window.rInput)" update="table" />
                 </div>
                 <div class="button">
-                    <p:commandButton value="Clear" action="#{inputBean.clear}" style="width: 100%;" />
+                    <p:commandButton value="Clear" action="#{inputBean.clear}" style="width: 100%;" update="table"
+                        oncomplete="redrawGraphCall(window.rInput)" />
                 </div>
             </div>
             <!-- Canvas -->
-            <div style="display: flex; align-items: center; justify-content: center;" class="row">
-                <canvas id="myCanvas" width="400" height="200" class="canvas"></canvas>
+            <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px" class="row">
+                <canvas id="myCanvas" width="400" height="200"></canvas>
             </div>
             <!-- Table -->
-            <h:dataTable value="#{yourBean.yourList}" var="item" style="width: 100%; text-align: center;">
-                <h:column>
-                    <f:facet name="header">X</f:facet>
-                    #{item.x}
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Y</f:facet>
-                    #{item.y}
-                </h:column>
-                <h:column>
-                    <f:facet name="header">R</f:facet>
-                    #{item.r}
-                </h:column>
-                <h:column>
-                    <f:facet name="header">STATUS</f:facet>
-                    #{item.status}
-                </h:column>
-                <h:column>
-                    <f:facet name="header">TIME</f:facet>
-                    #{item.time}
-                </h:column>
-            </h:dataTable>
+            <div style="height: 200px; overflow-y: scroll;">
+                <p:remoteCommand name="executeAddPoint" actionListener="#{tableBean.executeAddPoint}" update="table">
+                </p:remoteCommand>
+                <h:dataTable id="table" value="#{tableBean.points}" var="item" style="width: 100%; text-align: center;">
+                    <h:column>
+                        <f:facet name="header">X</f:facet>
+                        #{item.x}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Y</f:facet>
+                        #{item.y}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">R</f:facet>
+                        #{item.r}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">IS HIT</f:facet>
+                        #{item.result}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">TIME</f:facet>
+                        #{item.time}
+                    </h:column>
+
+                </h:dataTable>
+            </div>
         </div>
     </h:form>
 </h:body>
-
-
-<h:outputScript library="js" name="graph.js" />
-
 <script type="text/javascript">
-    function handleRadioChange(newValue) {
+    async function redrawGraphCall(newValue) {
+        window.rInput = newValue - 0;
         redrawGraph(newValue - 0)
+        const resp = await getPointDataExecute([{ name: 'r', value: newValue - 0 }])
+        drawDots(JSON.parse(resp.jqXHR.pfArgs.dots));
     }
 </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", async function () {
+        const resp = await getCurrentRExecute();
+        window.rInput = resp.jqXHR.pfArgs.r - 0;
+        redrawGraphCall(resp.jqXHR.pfArgs.r - 0);
+    })
+</script>
 <script type="text/javascript">
     function handleValidationResult(args) {
         // Check if there are any validation errors
@@ -108,5 +125,8 @@
         }
     }
 </script>
+
+
+<h:outputScript library="js" name="graph.js" />
 
 </html>

@@ -18,6 +18,12 @@ public class Validator {
     }
 
     public static boolean isHit(Double xValue, Double yValue, Integer selectedR) {
-        return true;
+        Boolean circ = isInsideCircle(xValue, yValue, selectedR);
+        return circ;
+    }
+
+    private static Boolean isInsideCircle(Double xValue, Double yValue, Integer selectedR) {
+        return (xValue <= 0 && yValue >= 0) &&
+                ((Math.pow(xValue, 2) + Math.pow(yValue, 2)) <= (Math.pow(selectedR / 2, 2)));
     }
 }

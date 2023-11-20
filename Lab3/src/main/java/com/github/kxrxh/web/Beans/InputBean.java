@@ -1,8 +1,9 @@
 package com.github.kxrxh.web.Beans;
 
-import java.io.Console;
 import java.io.Serializable;
 import java.util.Date;
+
+import org.primefaces.PrimeFaces;
 
 import com.github.kxrxh.web.DBManager;
 import com.github.kxrxh.web.validators.Validator;
@@ -13,16 +14,13 @@ import jakarta.inject.Named;
 @Named
 @SessionScoped
 public class InputBean implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
     // Properties for X, Y, and R values
-    private Double valueOfX;
+    private Double valueOfX = 0.0;
     private Double valueOfY;
     private Integer valueOfR;
 
     public InputBean() {
-        valueOfX = 0.0;
+        valueOfR = null;
         DBManager.init();
     }
 
@@ -62,12 +60,12 @@ public class InputBean implements Serializable {
                 new Date().toString());
     }
 
+    public void getCurrentRExecute() {
+        PrimeFaces.current().ajax().addCallbackParam("r", getValueOfR());
+    }
+
     // Method for the "Clear" button action
     public void clear() {
-        // Clear input values
-        valueOfX = null;
-        valueOfY = null;
-        valueOfR = null;
-        DBManager.clearTable();
+        DBManager.clearTable(valueOfR);
     }
 }

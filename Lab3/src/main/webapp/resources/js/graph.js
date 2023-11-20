@@ -60,13 +60,13 @@ function redrawGraph(r) {
   ctx.fillStyle = "#26b9c880";
   ctx.beginPath();
 
-  ctx.lineTo(w/2, h/2);
-  ctx.lineTo(w/2 + hatchGap, h/2);
+  ctx.lineTo(w / 2, h / 2);
+  ctx.lineTo(w / 2 + hatchGap, h / 2);
   ctx.lineTo(w / 2, h / 2 + hatchGap * 2);
-  ctx.lineTo(w/2 - hatchGap, h/2 + hatchGap * 2);
-  ctx.lineTo(w/2 - hatchGap, h/2);
-  ctx.arc(w/2, h/2, hatchGap, Math.PI, 1.5 * Math.PI, false);
-  ctx.lineTo(w/2, h/2);
+  ctx.lineTo(w / 2 - hatchGap, h / 2 + hatchGap * 2);
+  ctx.lineTo(w / 2 - hatchGap, h / 2);
+  ctx.arc(w / 2, h / 2, hatchGap, Math.PI, 1.5 * Math.PI, false);
+  ctx.lineTo(w / 2, h / 2);
   ctx.fill();
 
   ctx.strokeStyle = "#0457A0";
@@ -111,27 +111,48 @@ redrawGraph(rValue);
 
 const R = hatchGap * 2;
 
+
 canvas.addEventListener('click', (event) => {
-  if (rValid) {
-      // process click on graph
-      const canvasLeft = canvas.offsetLeft + canvas.clientLeft,
-          canvasTop = canvas.offsetTop + canvas.clientTop;
-
-      const x = event.pageX - canvasLeft,
-          y = event.pageY - canvasTop;
-
-      const xCenter = Math.round((x - w/2) / (hatchGap * (2/rInput.value))*1000)/1000,
-          yCenter = Math.round((h/2 - y) / (hatchGap * (2/rInput.value))*1000)/1000;
-
-      const oldX = xInput.value, oldY = yInput.value;
-      yInput.value = yCenter;
-      xInput.value = xCenter;
-
-      submitBtn.onclick(undefined);
-
-      xInput.value = oldX;
-      yInput.value = oldY;
-  } else {
-      messages.innerText = "Ошибка: значение R не задано!";
+  if (window.rInput) {
+    const [x, y] = convertArgs(event.clientX, event.clientY);
+    tx = (x / hatchGap) * window.rInput / 2;
+    ty = (-y / hatchGap) * window.rInput / 2;
+    executeAddPoint([{name: "x", value: tx}, {name: "y", value: ty}]);
+    console.log("(X, Y): (" + (x / hatchGap) * window.rInput / 2 + ", " + (-y / hatchGap) * window.rInput / 2 + ")");
+    drawPoint(x, y, "red");
   }
 })
+
+function toGraphCoords(x, y, r) {
+  return [x * 2 / r * hatchGap, -y * 2 / r * hatchGap];
+}
+
+function drawDots(dots) {
+  for (let i = 0; i < dots.length; i++) {
+    console.log(dots[i]);
+    const [x, y] = toGraphCoords(dots[i].x, dots[i].y, dots[i].r);
+    drawPoint(x, y, "blue");
+  }
+}
+
+function convertArgs(iX, iY) {
+  const rect = canvas.getBoundingClientRect();
+  const x = iX - rect.left - w / 2;
+  const y = iY - rect.top - h / 2;
+  return [x, y];
+}
+
+/**
+ * Draws a point on the canvas.
+ *
+ * @param {number} x - The x coordinate of the point.
+ * @param {number} y - The y coordinate of the point.
+ */
+function drawPoint(x, y, color) {
+  ctx.beginPath();
+  ctx.arc(w / 2 + x, h / 2 + y, 5, 0, 2 * Math.PI);
+
+  ctx.fillStyle = color
+  ctx.fill();
+  ctx.closePath();
+}

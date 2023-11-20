@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
+import java.util.List;
+
+import com.github.kxrxh.web.types.Point;
 
 public class DBManager {
     private static String JDBC_URL = "jdbc:postgresql://localhost:5432/lab3";
@@ -42,11 +44,12 @@ public class DBManager {
         }
     }
 
-    public static void clearTable() {
+    public static void clearTable(Integer rValue) {
         try {
             Connection connection = getConnection();
-            String sql = "DELETE FROM points WHERE EXISTS (SELECT * FROM points)";
+            String sql = "DELETE FROM points WHERE EXISTS (SELECT * FROM points) AND r = " + rValue; // SHIT CODE!
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
@@ -73,28 +76,52 @@ public class DBManager {
         }
     }
 
-    // Example method to execute a SELECT query
-    // public static ResultSet executeQuery(String sql, Object... params) {
-    // Connection connection = null;
-    // PreparedStatement preparedStatement = null;
-    // ResultSet resultSet = null;
+    public static List<Point> getAllPoints(Integer rValue) {
+        try {
+            Connection connection = getConnection();
+            String sql = "SELECT * FROM points WHERE r = " + rValue; // SO BAD :**(
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Point> points = new java.util.ArrayList<>();
+            while (resultSet.next()) {
+                Point point = new Point();
+                point.setX(resultSet.getDouble("x"));
+                point.setY(resultSet.getDouble("y"));
+                point.setR(resultSet.getInt("r"));
+                point.setResult(resultSet.getBoolean("result"));
+                point.setTime(resultSet.getString("time"));
+                points.add(point);
+            }
+            preparedStatement.close();
+            connection.close();
+            return points;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+        // Example method to execute a SELECT query
+        // public static ResultSet executeQuery(String sql, Object... params) {
+        // Connection connection = null;
+        // PreparedStatement preparedStatement = null;
+        // ResultSet resultSet = null;
 
-    // try {
-    // connection = getConnection();
-    // preparedStatement = connection.prepareStatement(sql);
+        // try {
+        // connection = getConnection();
+        // preparedStatement = connection.prepareStatement(sql);
 
-    // // Set parameters for the prepared statement (if any)
-    // for (int i = 0; i < params.length; i++) {
-    // preparedStatement.setObject(i + 1, params[i]);
-    // }
+        // // Set parameters for the prepared statement (if any)
+        // for (int i = 0; i < params.length; i++) {
+        // preparedStatement.setObject(i + 1, params[i]);
+        // }
 
-    // resultSet = preparedStatement.executeQuery();
-    // return resultSet;
-    // } catch (SQLException e) {
-    // e.printStackTrace();
-    // } finally {
-    // close(connection, preparedStatement, null);
-    // }
-    // return null;
-    // }
+        // resultSet = preparedStatement.executeQuery();
+        // return resultSet;
+        // } catch (SQLException e) {
+        // e.printStackTrace();
+        // } finally {
+        // close(connection, preparedStatement, null);
+        // }
+        // return null;
+        // }
 }
