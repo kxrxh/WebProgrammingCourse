@@ -112,14 +112,18 @@ redrawGraph(rValue);
 const R = hatchGap * 2;
 
 
-canvas.addEventListener('click', (event) => {
+canvas.addEventListener('click', async (event) => {
   if (window.rInput) {
     const [x, y] = convertArgs(event.clientX, event.clientY);
     tx = (x / hatchGap) * window.rInput / 2;
     ty = (-y / hatchGap) * window.rInput / 2;
-    executeAddPoint([{name: "x", value: tx}, {name: "y", value: ty}]);
+    executeAddPoint([{ name: "x", value: tx }, { name: "y", value: ty }]);
     console.log("(X, Y): (" + (x / hatchGap) * window.rInput / 2 + ", " + (-y / hatchGap) * window.rInput / 2 + ")");
-    drawPoint(x, y, "red");
+    const resp = await getPointDataExecute([{ name: 'r', value: window.rInput - 0 }])
+    const dots = JSON.parse(resp.jqXHR.pfArgs.dots);
+    const new_dot = dots[dots.length - 1];
+    const [dx, dy] = toGraphCoords(new_dot.x, new_dot.y, new_dot.r);
+    drawPoint(dx, dy, new_dot.result ? "blue" : "red");
   }
 })
 
@@ -129,9 +133,9 @@ function toGraphCoords(x, y, r) {
 
 function drawDots(dots) {
   for (let i = 0; i < dots.length; i++) {
-    console.log(dots[i]);
+    debugger
     const [x, y] = toGraphCoords(dots[i].x, dots[i].y, dots[i].r);
-    drawPoint(x, y, "blue");
+    drawPoint(x, y, dots[i].result ? "blue" : "red");
   }
 }
 

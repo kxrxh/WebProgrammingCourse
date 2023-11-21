@@ -10,29 +10,30 @@
     <h:form id="myForm">
 
         <div id="grid" class="panelGridCenter">
+            <!-- X Value -->
             <div class="row">
                 <div class="label">
                     <h:outputText value="X Value:" />
                 </div>
                 <div class="value">
-                    <p:inputText id="xInput" value="#{inputBean.valueOfX}" style="width: 100%" />
+                    <p:inputText id="xInput" value="#{inputBean.valueOfX}" style="width: 100%">
+                        <f:validateDoubleRange minimum="-5.0" maximum="5.0" />
+                    </p:inputText>
                     <p:slider for="xInput" minValue="-5" maxValue="5" step="0.1" style="width: 100%"
                         defaultValue="0.0" />
                 </div>
             </div>
 
-
+            <!-- Y Value -->
             <div class="row">
                 <div class="label" style="text-align: left;">
                     <h:outputText value="Y Value:" />
                 </div>
                 <div class="value">
                     <p:inputText id="yInput" value="#{inputBean.valueOfY}" style="width: 100%"
-                        placeholder="Enter a value between -5 and 5"
-                        validatorMessage="Y Value must be a valid number between -5 and 5">
+                        placeholder="Enter a value between -5 and 5">
                         <f:validateDoubleRange minimum="-5.0" maximum="5.0" />
                     </p:inputText>
-                    <p:message for="yInput" />
                 </div>
             </div>
 
@@ -77,11 +78,15 @@
                 <h:dataTable id="table" value="#{tableBean.points}" var="item" style="width: 100%; text-align: center;">
                     <h:column>
                         <f:facet name="header">X</f:facet>
-                        #{item.x}
+                        <h:outputText value="#{item.x}">
+                            <f:convertNumber pattern="#0.000" />
+                        </h:outputText>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Y</f:facet>
-                        #{item.y}
+                        <h:outputText value="#{item.y}">
+                            <f:convertNumber pattern="#0.000" />
+                        </h:outputText>
                     </h:column>
                     <h:column>
                         <f:facet name="header">R</f:facet>
@@ -95,8 +100,8 @@
                         <f:facet name="header">TIME</f:facet>
                         #{item.time}
                     </h:column>
-
                 </h:dataTable>
+
             </div>
         </div>
     </h:form>
@@ -113,7 +118,6 @@
 <script>
     document.addEventListener("DOMContentLoaded", async function () {
         const resp = await getCurrentRExecute();
-        window.rInput = resp.jqXHR.pfArgs.r - 0;
         redrawGraphCall(resp.jqXHR.pfArgs.r - 0);
     })
 </script>

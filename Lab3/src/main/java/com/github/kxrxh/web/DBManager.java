@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.kxrxh.web.types.Point;
@@ -21,7 +22,7 @@ public class DBManager {
     public static void init() {
         try {
             Connection connection = getConnection();
-            String sql = "CREATE TABLE IF NOT EXISTS points (x double precision, y double precision, r integer, result boolean, time varchar(255));";
+            String sql = "CREATE TABLE IF NOT EXISTS points (x double precision, y double precision, r integer, result boolean, time varchar(255), session_id varchar(255));";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.executeUpdate();
             preparedStatement.close();
@@ -44,13 +45,17 @@ public class DBManager {
         }
     }
 
-    public static void clearTable(Integer rValue) {
+    public static void clearTable(Integer rValue, String sessionID) {
         try {
             Connection connection = getConnection();
-            String sql = "DELETE FROM points WHERE EXISTS (SELECT * FROM points) AND r = " + rValue; // SHIT CODE!
+            String sql = "DELETE FROM points WHERE r = ? AND session_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
+            preparedStatement.setInt(1, rValue);
+            preparedStatement.setString(2, sessionID);
+
             preparedStatement.executeUpdate();
+
             preparedStatement.close();
             connection.close();
         } catch (SQLException e) {
@@ -58,16 +63,17 @@ public class DBManager {
         }
     }
 
-    public static void insertPoint(Double x, Double y, Integer r, Boolean result, String time) {
+    public static void insertPoint(Double x, Double y, Integer r, Boolean result, String time, String sessionID) {
         try {
             Connection connection = getConnection();
-            String sql = "INSERT INTO points (x, y, r, result, time) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO points (x, y, r, result, time, session_id) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setDouble(1, x);
             preparedStatement.setDouble(2, y);
             preparedStatement.setInt(3, r);
             preparedStatement.setBoolean(4, result);
             preparedStatement.setString(5, time);
+            preparedStatement.setString(6, sessionID);
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
@@ -76,13 +82,15 @@ public class DBManager {
         }
     }
 
-    public static List<Point> getAllPoints(Integer rValue) {
+    public static List<Point> getAllPoints(Integer rValue, String sessionID) {
         try {
             Connection connection = getConnection();
-            String sql = "SELECT * FROM points WHERE r = " + rValue; // SO BAD :**(
+            String sql = "SELECT * FROM points WHERE r = ? AND session_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, rValue);
+            preparedStatement.setString(2, sessionID);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Point> points = new java.util.ArrayList<>();
+            List<Point> points = new ArrayList<>();
             while (resultSet.next()) {
                 Point point = new Point();
                 point.setX(resultSet.getDouble("x"));
@@ -100,28 +108,4 @@ public class DBManager {
         }
         return null;
     }
-        // Example method to execute a SELECT query
-        // public static ResultSet executeQuery(String sql, Object... params) {
-        // Connection connection = null;
-        // PreparedStatement preparedStatement = null;
-        // ResultSet resultSet = null;
-
-        // try {
-        // connection = getConnection();
-        // preparedStatement = connection.prepareStatement(sql);
-
-        // // Set parameters for the prepared statement (if any)
-        // for (int i = 0; i < params.length; i++) {
-        // preparedStatement.setObject(i + 1, params[i]);
-        // }
-
-        // resultSet = preparedStatement.executeQuery();
-        // return resultSet;
-        // } catch (SQLException e) {
-        // e.printStackTrace();
-        // } finally {
-        // close(connection, preparedStatement, null);
-        // }
-        // return null;
-        // }
 }

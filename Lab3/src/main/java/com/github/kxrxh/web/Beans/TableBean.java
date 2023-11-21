@@ -13,9 +13,11 @@ import com.google.gson.Gson;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpSession;
 
 @Named
 @SessionScoped
@@ -28,6 +30,20 @@ public class TableBean implements Serializable {
     @PostConstruct
     public void init() {
         updatePoints(inputBean.getValueOfR());
+    }
+
+    private String getSessionID() {
+        // Get the current FacesContext
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+
+        // Get the ExternalContext
+        ExternalContext externalContext = facesContext.getExternalContext();
+
+        // Get the HttpSession
+        HttpSession session = (HttpSession) externalContext.getSession(false);
+
+        // Get the session ID
+        return session.getId();
     }
 
     public void handleRadioChange() {
@@ -50,16 +66,17 @@ public class TableBean implements Serializable {
     public void getPointDataExecute() {
         Integer r = Integer
                 .parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("r"));
-        PrimeFaces.current().ajax().addCallbackParam("dots", new Gson().toJson(DBManager.getAllPoints(r)));
+        PrimeFaces.current().ajax().addCallbackParam("dots",
+                new Gson().toJson(DBManager.getAllPoints(r, getSessionID())));
     }
 
     public void addPoint(Double x, Double y) {
         DBManager.insertPoint(x, y, inputBean.getValueOfR(), Validator.isHit(x, y, inputBean.getValueOfR()),
-                new Date().toString());
+                new Date().toString(), getSessionID());
         updatePoints(inputBean.getValueOfR());
     }
 
     private void updatePoints(Integer rValue) {
-        points = DBManager.getAllPoints(rValue);
+        points = DBManager.getAllPoints(rValue, getSessionID());
     }
 }
