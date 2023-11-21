@@ -1,0 +1,74 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+
+#myForm {
+    max-width: 1000px;
+    width: 60%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.label {
+    text-align: right;
+    padding-right: 10px;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.value {
+    text-align: left;
+}
+
+#xSlider {
+    margin-top: 10px;
+}
+
+#rRadio {
+    margin-top: 10px;
+}
+
+#buttons {
+    text-align: center;
+    margin: 15px;
+}
+
+.button {
+    margin: 10px;
+    width: 50%;
+}
+
+.row {
+    margin-bottom: 20px;
+}
+
+div#myForm\:xSlider {
+    margin-top: 10px;
+}
+
+#myForm\\:xInput {
+    width: 100%;
+}
+
+button#myForm {
+    margin: 10px;
+}
+
+.canvas {
+    width: 100%;
+    max-width: 40%;
+    border: 7px solid #2196F3;
+    box-shadow: 0 0 93px rgba(0, 0, 0, 0.2);
+    margin-bottom: 40px;
+}

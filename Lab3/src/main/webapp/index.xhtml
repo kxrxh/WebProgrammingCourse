@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Lab3</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+    <h:outputScript library="js" name="globalVariables.js" />
+</h:head>
+<h:body>
+    <h:form id="myForm">
+
+        <div id="grid" class="panelGridCenter">
+            <!-- X Value -->
+            <div class="row">
+                <div class="label">
+                    <h:outputText value="X Value:" />
+                </div>
+                <div class="value">
+                    <p:inputText id="xInput" value="#{inputBean.valueOfX}" style="width: 100%">
+                        <f:validateDoubleRange minimum="-5.0" maximum="5.0" />
+                    </p:inputText>
+                    <p:slider for="xInput" minValue="-5" maxValue="5" step="0.1" style="width: 100%"
+                        defaultValue="0.0" />
+                </div>
+            </div>
+
+            <!-- Y Value -->
+            <div class="row">
+                <div class="label" style="text-align: left;">
+                    <h:outputText value="Y Value:" />
+                </div>
+                <div class="value">
+                    <p:inputText id="yInput" value="#{inputBean.valueOfY}" style="width: 100%"
+                        placeholder="Enter a value between -5 and 5">
+                        <f:validateDoubleRange minimum="-5.0" maximum="5.0" />
+                    </p:inputText>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="label">
+                    <h:outputText value="R Value:" />
+                </div>
+                <div class="value">
+                    <p:remoteCommand name="getCurrentRExecute" action="#{inputBean.getCurrentRExecute}" />
+                    <p:remoteCommand name="getPointDataExecute" action="#{tableBean.getPointDataExecute}" />
+                    <p:selectOneRadio id="rRadio" value="#{inputBean.valueOfR}" onchange="redrawGraphCall(this.value)">
+                        <f:selectItem itemValue="1" itemLabel="1" />
+                        <f:selectItem itemValue="2" itemLabel="2" />
+                        <f:selectItem itemValue="3" itemLabel="3" />
+                        <f:selectItem itemValue="4" itemLabel="4" />
+                        <f:selectItem itemValue="5" itemLabel="5" />
+
+                        <p:ajax update="table" listener="#{tableBean.handleRadioChange}" />
+                    </p:selectOneRadio>
+
+                </div>
+            </div>
+            <div style="width: 100%; display: flex; align-items: center;">
+                <div class="button">
+                    <p:commandButton value="Submit" action="#{inputBean.send}" style="width: 100%;"
+                        oncomplete="redrawGraphCall(window.rInput)" update="table" />
+                </div>
+                <div class="button">
+                    <p:commandButton value="Clear" action="#{inputBean.clear}" style="width: 100%;" update="table"
+                        oncomplete="redrawGraphCall(window.rInput)" />
+                </div>
+            </div>
+            <!-- Canvas -->
+            <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px" class="row">
+                <canvas id="myCanvas" width="400" height="200"></canvas>
+            </div>
+            <!-- Table -->
+            <div style="height: 200px; overflow-y: scroll;">
+                <p:remoteCommand name="executeAddPoint" actionListener="#{tableBean.executeAddPoint}" update="table">
+                </p:remoteCommand>
+                <h:dataTable id="table" value="#{tableBean.points}" var="item" style="width: 100%; text-align: center;">
+                    <h:column>
+                        <f:facet name="header">X</f:facet>
+                        <h:outputText value="#{item.x}">
+                            <f:convertNumber pattern="#0.000" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Y</f:facet>
+                        <h:outputText value="#{item.y}">
+                            <f:convertNumber pattern="#0.000" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">R</f:facet>
+                        #{item.r}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">IS HIT</f:facet>
+                        #{item.result}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">TIME</f:facet>
+                        #{item.time}
+                    </h:column>
+                </h:dataTable>
+
+            </div>
+        </div>
+    </h:form>
+</h:body>
+<script type="text/javascript">
+    async function redrawGraphCall(newValue) {
+        window.rInput = newValue - 0;
+        redrawGraph(newValue - 0)
+        const resp = await getPointDataExecute([{ name: 'r', value: newValue - 0 }])
+        drawDots(JSON.parse(resp.jqXHR.pfArgs.dots));
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async function () {
+        const resp = await getCurrentRExecute();
+        redrawGraphCall(resp.jqXHR.pfArgs.r - 0);
+    })
+</script>
+<script type="text/javascript">
+    function handleValidationResult(args) {
+        // Check if there are any validation errors
+        if (args.validationFailed) {
+            alert("ERROR: Probably an invalid value entered.");
+        }
+    }
+</script>
+
+
+<h:outputScript library="js" name="graph.js" />
+
+</html>
