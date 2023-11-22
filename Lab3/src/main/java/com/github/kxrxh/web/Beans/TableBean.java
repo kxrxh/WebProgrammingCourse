@@ -29,6 +29,7 @@ public class TableBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        DBManager.init();
         updatePoints(inputBean.getValueOfR());
     }
 

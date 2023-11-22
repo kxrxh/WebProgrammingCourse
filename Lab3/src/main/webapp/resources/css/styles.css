@@ -72,3 +72,17 @@ button#myForm {
     box-shadow: 0 0 93px rgba(0, 0, 0, 0.2);
     margin-bottom: 40px;
 }
+
+.custom-link {
+    background-color: #2196F3;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.custom-link:hover {
+    background-color: rgb(3, 61, 100);
+}
