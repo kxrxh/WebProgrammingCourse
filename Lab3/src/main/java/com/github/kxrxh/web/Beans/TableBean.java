@@ -60,7 +60,7 @@ public class TableBean implements Serializable {
         Double x = Double
                 .parseDouble(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("x"));
         Double y = Double
-                .parseDouble(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("y"));
+                .parseDouble(FacesContext.getCurrentInstance().s().getRequestParameterMap().get("y"));
         addPoint(x, y);
     }
 

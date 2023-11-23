@@ -133,7 +133,6 @@ function toGraphCoords(x, y, r) {
 
 function drawDots(dots) {
   for (let i = 0; i < dots.length; i++) {
-    debugger
     const [x, y] = toGraphCoords(dots[i].x, dots[i].y, dots[i].r);
     drawPoint(x, y, dots[i].result ? "blue" : "red");
   }
