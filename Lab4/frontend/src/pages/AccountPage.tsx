@@ -1,12 +1,11 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './AccountPage.css';
-import { useEffect, useState } from 'react';
 import AccountView from '../components/AccountView';
 import LoginView from '../components/LoginView';
+import { useSelector } from 'react-redux';
 
 function AccountPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  useEffect(() => { }, []);
+  const isLoggedIn = useSelector((state: any) => state.user.isLogin);
   return (
     <IonPage>
       <IonHeader>

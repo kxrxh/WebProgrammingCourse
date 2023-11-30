@@ -33,10 +33,12 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import AccountPage from './pages/AccountPage';
 import InfoPage from './pages/InfoPage';
+import { useSelector } from 'react-redux';
 
 setupIonicReact();
 
 function App() {
+  const isLogged = useSelector((state: any) => state.user.isLogin);
   return (
     <IonApp>
       <IonReactRouter>
