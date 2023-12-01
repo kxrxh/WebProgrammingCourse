@@ -1,5 +1,4 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import './AccountPage.css';
 import AccountView from '../components/AccountView';
 import LoginView from '../components/LoginView';
 import { useSelector } from 'react-redux';

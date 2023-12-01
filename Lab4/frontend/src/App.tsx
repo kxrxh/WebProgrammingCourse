@@ -59,7 +59,7 @@ function App() {
           </IonRouterOutlet>
 
           <IonTabBar slot="bottom">
-            <IonTabButton tab="graph_tab" href="/main" disabled={true}>
+            <IonTabButton tab="graph_tab" href="/main" disabled={!isLogged}>
               <IonIcon aria-hidden="true" icon={rocket} />
               <IonLabel>Graph</IonLabel>
             </IonTabButton>

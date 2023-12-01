@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'com.github.kxrxh.lab4',
   appName: 'frontend-lab4',
   webDir: 'dist',
   server: {
