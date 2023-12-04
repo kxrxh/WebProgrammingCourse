@@ -1,18 +1,12 @@
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonInput, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
-import { For } from 'million/react';
-import { useEffect, useRef, useState } from 'react';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonHeader, IonIcon, IonInput, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { useRef, useState } from 'react';
 import Alert from '../components/Alert';
 import Graph from '../components/Graph';
 import "../theme/card.css";
 import { timeStampToDate } from '../utils';
+import { arrowUp } from 'ionicons/icons';
+import { TableRow } from '../api';
 
-type TableRow = {
-  x: number,
-  y: number,
-  r: number
-  hit: boolean,
-  time: number
-}
 function MainPage() {
   const [valueOfR, setValueOfR] = useState("R");
   const [message, setMessage] = useState("");
@@ -21,7 +15,7 @@ function MainPage() {
   const xInput = useRef<HTMLIonInputElement>(null);
   const yInput = useRef<HTMLIonInputElement>(null);
   const rInput = useRef<HTMLIonInputElement>(null);
-
+  const contentRef = useRef<HTMLIonContentElement>(null);
   const showAlert = (msg: string) => {
     setMessage(msg);
     setIsOpen(true);
@@ -95,6 +89,12 @@ function MainPage() {
     setValueOfR(event.detail.value);
   };
 
+  function scrollToTop() {
+    // Passing a duration to the method makes it so the scroll slowly
+    // goes to the top instead of instantly
+    contentRef.current!.scrollToTop(500);
+  }
+
 
   return (
     <IonPage>
@@ -103,8 +103,8 @@ function MainPage() {
           <IonTitle>Graph view</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <div className='card-container'>
+      <IonContent ref={contentRef} fullscreen={true}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
           <IonCard className='card'>
             <IonCardHeader>
               <IonCardTitle>Inputs</IonCardTitle>
@@ -157,31 +157,25 @@ function MainPage() {
                   <IonCol><IonText color={"secondary"}><h2>Hit?</h2></IonText></IonCol>
                   <IonCol><IonText color={"tertiary"}><h2>Time</h2></IonText></IonCol>
                 </IonRow>
-                <div style={{ maxHeight: 'calc(13vh)', overflow: 'scroll' }}>
-                  {/* <For each={rows}>{(row, i) =>
-                    <IonRow key={i}>
-                      <IonCol>{row.x}</IonCol>
-                      <IonCol>{row.y}</IonCol>
-                      <IonCol>{row.r}</IonCol>
-                      <IonCol>{row.hit ? "Yes" : "No"}</IonCol>
-                      <IonCol>{timeStampToDate(row.time)}</IonCol>
-                    </IonRow>}
-                  </For> */}
-                  {rows.map((row, i) => (
-                    <IonRow key={i}>
-                      <IonCol>{row.x}</IonCol>
-                      <IonCol>{row.y}</IonCol>
-                      <IonCol>{row.r}</IonCol>
-                      <IonCol>{row.hit ? "Yes" : "No"}</IonCol>
-                      <IonCol>{timeStampToDate(row.time)}</IonCol>
-                    </IonRow>
-                  ))}
-                </div>
+                {rows.map((row, i) => (
+                  <IonRow key={i}>
+                    <IonCol>{row.x}</IonCol>
+                    <IonCol>{row.y}</IonCol>
+                    <IonCol>{row.r}</IonCol>
+                    <IonCol>{row.hit ? "Yes" : "No"}</IonCol>
+                    <IonCol>{timeStampToDate(row.time)}</IonCol>
+                  </IonRow>
+                ))}
               </IonGrid>
             </IonCardContent>
           </IonCard>
         </div>
       </IonContent>
+      <IonFab vertical="bottom" horizontal="end" slot="fixed">
+        <IonFabButton onClick={scrollToTop}>
+          <IonIcon icon={arrowUp} />
+        </IonFabButton>
+      </IonFab>
     </IonPage>
   );
 };

@@ -40,32 +40,30 @@ function LoginView() {
   }
 
   return (
-    <div className="card-container">
-      <IonCard className="card">
-        <IonCardHeader>
-          <IonCardTitle>Ho-ho-ho! <span onClick={onLabelClick} style={{ cursor: "pointer" }}>🎅</span></IonCardTitle>
-        </IonCardHeader>
-        <IonCardContent>
-          <IonInput label="Login"
-            labelPlacement="floating"
-            fill="outline"
-            placeholder="Your login"
-            ref={ionLoginInput}
-            style={{ marginBottom: "10px" }} />
-          <IonInput
-            label="Password"
-            labelPlacement="floating"
-            fill="outline"
-            placeholder="Your password"
-            type="password"
-            ref={ionPasswordInput}
-            style={{ marginBottom: "1%" }} />
-          <IonButton fill="outline" expand="block" style={{ marginTop: "20px" }} onClick={onLoginClick}>Sing in</IonButton>
-          <IonButton fill="outline" expand="block" color="warning" style={{ marginTop: "10px" }} onClick={onRegisterClick}>Sing up</IonButton>
-          <Alert header="Error" message={message} buttons={["OK"]} isOpen={isOpen} setIsOpen={setIsOpen} />
-        </IonCardContent>
-      </IonCard>
-    </div>
+    <IonCard className="card">
+      <IonCardHeader>
+        <IonCardTitle>Ho-ho-ho! <span onClick={onLabelClick} style={{ cursor: "pointer" }}>🎅</span></IonCardTitle>
+      </IonCardHeader>
+      <IonCardContent>
+        <IonInput label="Login"
+          labelPlacement="floating"
+          fill="outline"
+          placeholder="Your login"
+          ref={ionLoginInput}
+          style={{ marginBottom: "10px" }} />
+        <IonInput
+          label="Password"
+          labelPlacement="floating"
+          fill="outline"
+          placeholder="Your password"
+          type="password"
+          ref={ionPasswordInput}
+          style={{ marginBottom: "1%" }} />
+        <IonButton fill="outline" expand="block" style={{ marginTop: "20px" }} onClick={onLoginClick}>Sing in</IonButton>
+        <IonButton fill="outline" expand="block" color="warning" style={{ marginTop: "10px" }} onClick={onRegisterClick}>Sing up</IonButton>
+        <Alert header="Error" message={message} buttons={["OK"]} isOpen={isOpen} setIsOpen={setIsOpen} />
+      </IonCardContent>
+    </IonCard>
   );
 }
 

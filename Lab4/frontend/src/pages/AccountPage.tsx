@@ -13,7 +13,9 @@ function AccountPage() {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        {isLoggedIn ? <AccountView /> : <LoginView />}
+        <div style={{ display: "flex", justifyContent: "center", }}>
+          {isLoggedIn ? <AccountView /> : <LoginView />}
+        </div>
       </IonContent>
     </IonPage>
   );
