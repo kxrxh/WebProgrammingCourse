@@ -37,13 +37,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 username = jwtUtil.extractUsername(jwt);
             } catch (ExpiredJwtException e) {
                 // Handle token expiration
+                System.exit(1);
             }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailService.loadUserByUsername(username);
 
-            if (jwtUtil.validateToken(jwt, userDetails)) {
+            if (jwtUtil.validateToken(jwt)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

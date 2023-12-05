@@ -45,7 +45,7 @@ public class AuthController {
         if (userDetails == null) {
             return ResponseEntity.badRequest().body(new AuthResponse("Error", "Wrong username or password", null));
         }
-        final String token = jwtUtil.generateToken(userDetails);
+        final String token = jwtUtil.generateToken(userDetails.getUsername());
 
         return ResponseEntity.ok(new AuthResponse("Success", "User successfully authorized", token));
     }
@@ -69,7 +69,7 @@ public class AuthController {
         newUser.setPassword(hashPasswordSHA256(password));
         userRepository.save(newUser);
 
-        final String token = jwtUtil.generateToken(userDetails);
+        final String token = jwtUtil.generateToken(userDetails.getUsername());
         if (token == null) {
             return ResponseEntity.internalServerError()
                     .body(new AuthResponse("Error", "Unable to generate user token", null));

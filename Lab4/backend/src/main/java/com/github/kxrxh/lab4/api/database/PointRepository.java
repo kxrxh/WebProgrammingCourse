@@ -12,7 +12,7 @@ public interface PointRepository extends Repository<Point, Long> {
 
     Optional<Point> findById(Long id);
 
-    Optional<List<Point>> findByUserIdAndR(Long userId);
+    Optional<List<Point>> findByUserIdAndR(Long userId, Double r);
 
     Optional<List<Point>> findByR(Double r);
 

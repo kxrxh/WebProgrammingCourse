@@ -51,7 +51,7 @@ function App() {
               <MainPage />
             </Route>
             <Route exact path="/">
-              <Redirect to="/account" />
+              <Redirect to={isLogged ? "/main" : "/account"} />
             </Route>
             <Route exact path="/credits">
               <InfoPage />

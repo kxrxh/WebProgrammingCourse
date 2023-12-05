@@ -21,6 +21,19 @@ function MainPage() {
     setIsOpen(true);
   };
 
+  const handleScroll = (event: CustomEvent) => {
+    const scrollTop = event.detail.scrollTop;
+
+    // Check if the user is at the top of the page
+    const isAtTop = scrollTop === 0;
+
+    // Set the visibility of IonFab based on the scroll position
+    const fabButton = document.getElementById('fab-button');
+    if (fabButton) {
+      fabButton.style.visibility = isAtTop ? 'hidden' : 'visible';
+    }
+  };
+
   const onPushClick = () => {
     if (!xInput.current || !yInput.current || !rInput.current) {
       showAlert("Some of the inputs are empty!");
@@ -170,12 +183,12 @@ function MainPage() {
             </IonCardContent>
           </IonCard>
         </div>
+        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+          <IonFabButton onClick={scrollToTop}>
+            <IonIcon icon={arrowUp} />
+          </IonFabButton>
+        </IonFab>
       </IonContent>
-      <IonFab vertical="bottom" horizontal="end" slot="fixed">
-        <IonFabButton onClick={scrollToTop}>
-          <IonIcon icon={arrowUp} />
-        </IonFabButton>
-      </IonFab>
     </IonPage>
   );
 };

@@ -6,5 +6,6 @@ export type TableRow = {
     time: number
 }
 
-async function getPoints(R: number, login: string): Promise<TableRow[]> {
+async function getPoints(R: number, login: string): Promise<any> {
+    
 }
