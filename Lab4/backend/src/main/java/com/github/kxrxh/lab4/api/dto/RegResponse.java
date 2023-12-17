@@ -1,16 +1,14 @@
 package com.github.kxrxh.lab4.api.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@AllArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor  
-@AllArgsConstructor
-public class AuthResponse {
-    private String status;
+@Data
+public class RegResponse {
     private String message;
-    private String token;
 }
