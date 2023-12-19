@@ -27,7 +27,7 @@
                         defaultValue="0.0" />
                 </div>
             </div>
-
+            
             <!-- Y Value -->
             <div class="row">
                 <div class="label" style="text-align: left;">
@@ -36,7 +36,6 @@
                 <div class="value">
                     <p:inputText id="yInput" value="#{inputBean.valueOfY}" style="width: 100%"
                         placeholder="Enter a value between -5 and 5">
-                        <f:validateDoubleRange minimum="-5.0" maximum="5.0" />
                     </p:inputText>
                 </div>
             </div>
@@ -64,7 +63,7 @@
             <div style="width: 100%; display: flex; align-items: center;">
                 <div class="button">
                     <p:commandButton value="Submit" action="#{inputBean.send}" style="width: 100%;"
-                        oncomplete="redrawGraphCall(window.rInput)" update="table" />
+                        oncomplete="redrawGraphCall(window.rInput)" update="table"/>
                 </div>
                 <div class="button">
                     <p:commandButton value="Clear" action="#{inputBean.clear}" style="width: 100%;" update="table"
