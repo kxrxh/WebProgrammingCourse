@@ -2,13 +2,16 @@ package com.github.kxrxh.lab4.api.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.IOException;
 import io.jsonwebtoken.security.Keys;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,11 +22,12 @@ import javax.crypto.SecretKey;
 @Component
 public class JwtService {
 
-    @Value("${jwt.secret}")
-    private String secret;
-
     @Value("${jwt.expiration}")
     private long expiration;
+
+    private static final String SECRET_FILE_NAME = "key.pem";
+
+    private SecretKey secretKey;
 
     /**
      * Generates a token for the given user.
@@ -48,18 +52,51 @@ public class JwtService {
                 .claims(claims)
                 .subject(userName)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(expiration))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSecretKey()).compact();
     }
 
-    /**
-     * Returns the secret key used for encryption.
-     *
-     * @return the secret key
-     */
     private SecretKey getSecretKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        if (secretKey == null) {
+            try {
+                secretKey = loadOrCreateSecretKey();
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return secretKey;
+    }
+
+    private SecretKey loadOrCreateSecretKey() throws java.io.IOException {
+        try {
+            Path jarDirectory = Path.of(System.getProperty("user.dir"));
+            Path secretFilePath = jarDirectory.resolve(SECRET_FILE_NAME);
+
+            if (Files.exists(secretFilePath)) {
+                byte[] keyBytes = Files.readAllBytes(secretFilePath);
+                return Keys.hmacShaKeyFor(Base64.getDecoder().decode(keyBytes));
+            } else {
+                SecretKey generatedKey = generateAndSaveKey(secretFilePath);
+                return generatedKey;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load or create JWT secret key", e);
+        }
+    }
+
+    private SecretKey generateAndSaveKey(Path secretFilePath) throws IOException, java.io.IOException {
+        SecretKey generatedKey = Jwts.SIG.HS256.key().build();
+        byte[] encodedKey = Base64.getEncoder().encode(generatedKey.getEncoded());
+
+        // Append the secret file name to the JAR directory
+        try {
+            Files.write(secretFilePath, encodedKey, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        } catch (IOException e) {
+            throw new IOException("Failed to write secret key to file", e);
+        }
+
+        return generatedKey;
     }
 
     /**
@@ -101,10 +138,14 @@ public class JwtService {
      * @return the extracted claims
      */
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSecretKey())
-                .build()
-                .parseSignedClaims(token).getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSecretKey())
+                    .build()
+                    .parseSignedClaims(token).getPayload();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse JWT token", e);
+        }
     }
 
     /**

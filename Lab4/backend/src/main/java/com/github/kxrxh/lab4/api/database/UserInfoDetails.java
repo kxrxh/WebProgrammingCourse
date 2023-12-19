@@ -4,7 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.github.kxrxh.lab4.api.database.model.User;
+import com.github.kxrxh.lab4.api.database.model.AppUser;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,7 +17,7 @@ public class UserInfoDetails implements UserDetails {
     private String password;
     private List<GrantedAuthority> authorities;
 
-    public UserInfoDetails(User userInfo) {
+    public UserInfoDetails(AppUser userInfo) {
         login = userInfo.getName();
         password = userInfo.getPassword();
         authorities = Arrays.stream(userInfo.getRoles().split(","))

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.kxrxh.lab4.api.database.UserInfoDetails;
 import com.github.kxrxh.lab4.api.database.UserRepository;
-import com.github.kxrxh.lab4.api.database.model.User;
+import com.github.kxrxh.lab4.api.database.model.AppUser;
 
 import java.util.Optional;
 
@@ -25,15 +25,15 @@ public class UserInfoService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
 
-        Optional<User> userDetail = repository.findByLogin(login);
+        Optional<AppUser> userDetail = repository.findByName(login);
 
         // Converting userDetail to UserDetails
         return userDetail.map(UserInfoDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found " + login));
     }
 
-    public Optional<String> addUser(User userInfo) {
-        if (repository.findByLogin(userInfo.getName()).isPresent()) {
+    public Optional<String> addUser(AppUser userInfo) {
+        if (repository.findByName(userInfo.getName()).isPresent()) {
             return Optional.empty();
         }
         userInfo.setPassword(encoder.encode(userInfo.getPassword()));

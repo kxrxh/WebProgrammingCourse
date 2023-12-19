@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import com.github.kxrxh.lab4.api.database.UserRepository;
-import com.github.kxrxh.lab4.api.database.model.User;
+import com.github.kxrxh.lab4.api.database.model.AppUser;
 import com.github.kxrxh.lab4.api.dto.AuthRequest;
 import com.github.kxrxh.lab4.api.dto.LoginResponse;
 import com.github.kxrxh.lab4.api.dto.RegResponse;
@@ -19,7 +19,7 @@ import com.github.kxrxh.lab4.api.services.JwtService;
 import com.github.kxrxh.lab4.api.services.UserInfoService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(value = "/auth", produces = "application/json", consumes = "application/json")
 public class UserController {
 
     @Autowired
@@ -36,12 +36,12 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<RegResponse> register(@RequestBody AuthRequest userInfo) {
-        if (userRepository.findByLogin(userInfo.getUsername()).isPresent()) {
+        if (userRepository.findByName(userInfo.getUsername()).isPresent()) {
 
             throw new UsernameNotFoundException("User already exists");
         }
 
-        Optional<String> result = service.addUser(new User(userInfo.getUsername(), userInfo.getPassword()));
+        Optional<String> result = service.addUser(new AppUser(userInfo.getUsername(), userInfo.getPassword()));
         if (result.isPresent()) {
             return ResponseEntity.ok(new RegResponse(result.get()));
         }
@@ -59,6 +59,7 @@ public class UserController {
         if (authentication.isAuthenticated()) {
             return ResponseEntity.ok(new LoginResponse("OK", jwtService.generateToken(authRequest.getUsername())));
         }
+        System.out.println("Authentication failed");
         return ResponseEntity.badRequest().body(new LoginResponse("Bad Request. Login or password is incorrect", null));
     }
 

@@ -22,9 +22,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable {
+public class AppUser implements Serializable {
 
-    public User(String name, String password) {
+    public AppUser(String name, String password) {
         this.name = name;
         this.password = password;
         this.roles = "ROLE_USER";

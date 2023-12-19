@@ -19,7 +19,7 @@ public class PointsResponse {
 
     public PointsResponse(List<Point> points) {
         this.points = points;
-        this.message = "OK";
+        this.message = "ok";
     }
 
     private List<Point> points;

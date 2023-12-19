@@ -16,4 +16,6 @@ public interface PointRepository extends Repository<Point, Long> {
 
     Optional<List<Point>> findByR(Double r);
 
+    void deleteByUserNameAndR(String userName, Double r);
+
 }

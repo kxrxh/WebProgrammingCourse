@@ -4,14 +4,16 @@ import java.util.Optional;
 
 import org.springframework.data.repository.Repository;
 
-import com.github.kxrxh.lab4.api.database.model.User;
+import com.github.kxrxh.lab4.api.database.model.AppUser;
 
-public interface UserRepository extends Repository<User, Long> {
-    User save(User user);
+public interface UserRepository extends Repository<AppUser, Long> {
+    AppUser save(AppUser user);
 
-    Optional<User> findById(Long id);
+    Optional<AppUser> findById(Long id);
 
-    Optional<User> findByLogin(String login);
+    Optional<AppUser> findByName(String name);
 
-    Optional<User> findByLoginAndPassword(String login, String password);
+    Optional<AppUser> findByNameAndPassword(String name, String password);
+
+    void deleteByName(String name);
 }
