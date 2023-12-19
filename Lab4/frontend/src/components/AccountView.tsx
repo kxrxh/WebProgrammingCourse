@@ -1,19 +1,17 @@
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText } from "@ionic/react";
 import "../theme/card.css";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../storage/actions/userActions";
+import { logoutAction } from "../storage/actions/userActions";
 import { memo } from "react";
-import { timeStampToDate } from "../utils";
 
 const AccountView = memo(() => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.login);
-  const data = new Date().getTime();
   const points = 0;
   const total = 0;
 
   const onLogoutClick = () => {
-    dispatch(logout());
+    dispatch(logoutAction());
   }
 
   const onPasswordChangeClick = () => {
@@ -29,7 +27,6 @@ const AccountView = memo(() => {
         <div style={{ padding: '2%', textAlign: 'left' }}>
           <IonText>
             <h3>Account name: <span style={{ fontWeight: 'bold' }}>{user}</span></h3>
-            <h3>Account creation date: <span style={{ fontWeight: 'bold' }}>{timeStampToDate(data)}</span></h3>
             <h3>Total point placed: <span style={{ fontWeight: 'bold' }}>{total}</span></h3>
             <h3>Current number of points: <span style={{ fontWeight: 'bold' }}>{points}</span></h3>
           </IonText>

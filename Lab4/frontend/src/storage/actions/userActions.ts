@@ -1,8 +1,8 @@
-export const login = (login: string, token: string) => ({
+export const loginAction = (login: string, token: string) => ({
   type: 'LOGIN',
   payload: { login, token },
 });
 
-export const logout = () => ({
+export const logoutAction = () => ({
   type: 'LOGOUT',
 });

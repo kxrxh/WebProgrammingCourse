@@ -1,13 +1,19 @@
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonHeader, IonIcon, IonInput, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Alert from '../components/Alert';
 import Graph from '../components/Graph';
 import "../theme/card.css";
-import { timeStampToDate } from '../utils';
 import { arrowUp } from 'ionicons/icons';
-import { TableRow } from '../api';
+import { TableRow, addPoint, clearRecords, fetchPointsWithToken } from '../api';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutAction } from '../storage/actions/userActions';
+import formatDate from '../utils';
+import { GraphData } from '../utils/graph';
+
 
 function MainPage() {
+  const [forceUpdateGraph, setForceUpdateGraph] = useState(false);
+  const dispatch = useDispatch();
   const [valueOfR, setValueOfR] = useState("R");
   const [message, setMessage] = useState("");
   const [rows, setRows] = useState<TableRow[]>([]);
@@ -16,6 +22,44 @@ function MainPage() {
   const yInput = useRef<HTMLIonInputElement>(null);
   const rInput = useRef<HTMLIonInputElement>(null);
   const contentRef = useRef<HTMLIonContentElement>(null);
+  const token = useSelector((state: any) => state.user.token);
+
+  /**
+   * Asynchronously updates the table with new data points.
+   * Fetches points using the provided token and rInput value,
+   * dispatches a logout action on unauthorized error, or shows
+   * an alert for other errors. Updates state with new table rows.
+   *
+   * @param {string} token - The authentication token.
+   * @return {void} No return value.
+   */
+  const updateTable = async () => {
+    fetchPointsWithToken(token, parseFloat(rInput.current!.value as string)).catch((error) => {
+      if (error.message == "Unauthorized!") {
+        dispatch(logoutAction());
+        return;
+      }
+      showAlert("Something went wrong! Unable to fetch points!");
+    }).then((data) => {
+      let newRows: TableRow[] = [];
+      const points: GraphData = data['points'];
+      points.forEach((row) => {
+        const newRow: TableRow = {
+          x: row['x'],
+          y: row['y'],
+          r: row['r'],
+          hit: row['hit'],
+          time: row['time'],
+        }
+        newRows.push(newRow);
+      })
+      setRows(newRows);
+    });
+  }
+
+  useEffect(() => {
+    updateTable();
+  }, [token]);
   const showAlert = (msg: string) => {
     setMessage(msg);
     setIsOpen(true);
@@ -34,7 +78,7 @@ function MainPage() {
     }
   };
 
-  const onPushClick = () => {
+  const onPushClick = async () => {
     if (!xInput.current || !yInput.current || !rInput.current) {
       showAlert("Some of the inputs are empty!");
       return;
@@ -72,34 +116,53 @@ function MainPage() {
       return;
     }
 
-    setRows((prevRows) => {
-      const newRows = prevRows.concat({
-        x: x,
-        y: y,
-        r: parseFloat(rInput.current!.value as string),
-        hit: false,
-        time: Date.now(),
-      });
-      return newRows;
+    await addPoint(token, x, y, parseFloat(rInput.current.value as string)).then((data) => {
+      const point = data['points'][0];
+      const newRow: TableRow = {
+        x: point['x'],
+        y: point['y'],
+        r: point['r'],
+        hit: point['hit'],
+        time: point['time'],
+      }
+      setRows([...rows, newRow]);
+      setForceUpdateGraph((prev) => !prev);
+    }).catch((error) => {
+      if (error.message == "Unauthorized!") {
+        dispatch(logoutAction());
+        return;
+      }
+      showAlert("Something went wrong! Unable to add point!");
     });
   }
 
-  const onClearClick = () => {
-    setRows([]);
-  }
+
+  const onClearClick = async () => {
+    clearRecords(token, parseFloat(valueOfR)).catch((error) => {
+      if (error.message == "Unauthorized!") {
+        dispatch(logoutAction());
+        return;
+      }
+      showAlert("Something went wrong! Unable to clear records!");
+    }).then(() => {
+      setRows([]);
+      setForceUpdateGraph((prev) => !prev);
+    });
+  };
 
   const onRInputChange = (event: CustomEvent) => {
     if (event.detail.value == "") {
       return;
     }
     const r = parseFloat(event.detail.value as string);
-    if (-5 > r || r > 3 || r == 0) {
+    if (r > 3 || r <= 0) {
       rInput.current!.value = "";
       setValueOfR("R");
       showAlert("R value is out of range!");
       return;
     }
     setValueOfR(event.detail.value);
+    updateTable();
   };
 
   function scrollToTop() {
@@ -148,7 +211,7 @@ function MainPage() {
                 label="R value"
                 labelPlacement="floating"
                 fill="outline"
-                placeholder="-5...3"
+                placeholder="0...3"
                 type="number"
                 step='0.1'
                 color={"danger"}
@@ -161,7 +224,7 @@ function MainPage() {
                 <IonButton fill="outline" style={{ width: '52%', margin: "5px" }} color={'danger'} onClick={onClearClick}>Clear</IonButton>
               </div>
               <Alert header="Error 😔" message={message} buttons={["OK"]} isOpen={isOpen} setIsOpen={setIsOpen} />
-              <Graph rValue={valueOfR} />
+              <Graph rValue={valueOfR} updateTable={updateTable} forceUpdate={forceUpdateGraph} />
               <IonGrid style={{ textAlign: 'left' }}>
                 <IonRow>
                   <IonCol><IonText color={"success"} ><h2>X</h2></IonText></IonCol>
@@ -172,11 +235,11 @@ function MainPage() {
                 </IonRow>
                 {rows.map((row, i) => (
                   <IonRow key={i}>
-                    <IonCol>{row.x}</IonCol>
-                    <IonCol>{row.y}</IonCol>
-                    <IonCol>{row.r}</IonCol>
+                    <IonCol>{Number(row.x).toFixed(3)}</IonCol>
+                    <IonCol>{Number(row.y).toFixed(3)}</IonCol>
+                    <IonCol>{Number(row.r).toFixed(3)}</IonCol>
                     <IonCol>{row.hit ? "Yes" : "No"}</IonCol>
-                    <IonCol>{timeStampToDate(row.time)}</IonCol>
+                    <IonCol>{formatDate(new Date(row.time))}</IonCol>
                   </IonRow>
                 ))}
               </IonGrid>

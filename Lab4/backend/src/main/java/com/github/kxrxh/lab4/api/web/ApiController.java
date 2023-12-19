@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,7 @@ public class ApiController {
     @Autowired
     private UserRepository userRepository;
 
+    @CrossOrigin
     @GetMapping("/points")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<PointsResponse> getUserPoints(@RequestParam("r") Double r) {
@@ -59,35 +61,37 @@ public class ApiController {
         return ResponseEntity.badRequest().body(new PointsResponse("Bad Request. User not found"));
     }
 
+    @CrossOrigin
     @PostMapping("/points")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @Transactional
-    public ResponseEntity<BasicResponse> addPoints(@RequestParam("x") Double x, @RequestParam("y") Double y,
+    public ResponseEntity<PointsResponse> addPoints(@RequestParam("x") Double x, @RequestParam("y") Double y,
             @RequestParam("r") Double r) {
 
         if (x == null || y == null || r == null) {
-            return ResponseEntity.badRequest().body(new BasicResponse("Bad Request. All parameters are required"));
+            return ResponseEntity.badRequest().body(new PointsResponse("Bad Request. All parameters are required"));
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         if (username == null) {
             return ResponseEntity.badRequest()
-                    .body(new BasicResponse("Bad Request. Unable to extract username from token"));
+                    .body(new PointsResponse("Bad Request. Unable to extract username from token"));
         }
         AppUser user = userRepository.findByName(username).get();
 
         if (user == null) {
             return ResponseEntity.badRequest()
-                    .body(new BasicResponse("Bad Request. Unable to extract username from token"));
+                    .body(new PointsResponse("Bad Request. Unable to extract username from token"));
         }
         Point p = pointRepository.save(new Point(x, y, r, user));
         if (p == null) {
-            return ResponseEntity.badRequest().body(new BasicResponse("Bad Request. Unable to save point"));
+            return ResponseEntity.badRequest().body(new PointsResponse("Bad Request. Unable to save point"));
         }
-        return ResponseEntity.ok(new BasicResponse("ok"));
+        return ResponseEntity.ok(new PointsResponse(List.of(p)));
     }
 
+    @CrossOrigin
     @DeleteMapping("/points")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @Transactional
@@ -105,6 +109,7 @@ public class ApiController {
         return ResponseEntity.ok(new BasicResponse("ok"));
     }
 
+    @CrossOrigin
     @DeleteMapping("/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BasicResponse> deleteUsers() {

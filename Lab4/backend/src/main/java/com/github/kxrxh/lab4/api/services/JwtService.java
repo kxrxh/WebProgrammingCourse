@@ -144,7 +144,7 @@ public class JwtService {
                     .build()
                     .parseSignedClaims(token).getPayload();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to parse JWT token", e);
+            return Jwts.claims().build();
         }
     }
 
