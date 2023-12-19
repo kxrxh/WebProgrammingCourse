@@ -108,18 +108,4 @@ public class ApiController {
         pointRepository.deleteByUserNameAndR(username, r);
         return ResponseEntity.ok(new BasicResponse("ok"));
     }
-
-    @CrossOrigin
-    @DeleteMapping("/users")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<BasicResponse> deleteUsers() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        if (username == null) {
-            return ResponseEntity.badRequest()
-                    .body(new BasicResponse("Bad Request. Unable to extract username from token"));
-        }
-        userRepository.deleteByName(username);
-        return ResponseEntity.ok(new BasicResponse("ok"));
-    }
 }

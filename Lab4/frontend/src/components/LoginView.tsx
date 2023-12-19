@@ -2,7 +2,7 @@ import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonInp
 import { useRef, useState } from "react";
 import Alert from "./Alert";
 import "../theme/card.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loginAction } from "../storage/actions/userActions";
 import { loginToAccount, registerNewAccount } from "../api";
 
@@ -60,17 +60,18 @@ function LoginView() {
         return;
       }
 
-      registerNewAccount(userName, password).catch((error) => {
+      registerNewAccount(userName, password).then(() => {
+        setHeader("Success");
+        setMessage("Account created!");
+        setIsOpen(true);
+      }).catch((error) => {
         if (error) {
           setMessage("Something went wrong! Maybe this user already exists?");
           setHeader("Error");
           clearPasswordInput();
           setIsOpen(true);
+          return;
         }
-      }).then(() => {
-        setHeader("Success");
-        setMessage("Account created!");
-        setIsOpen(true);
       });
     }
   }

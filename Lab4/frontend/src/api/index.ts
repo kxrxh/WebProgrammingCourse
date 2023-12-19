@@ -108,6 +108,7 @@ export async function clearRecords(token: string, r: number): Promise<any> {
     }
 }
 
+
 function handleErrorResponse(error: any) {
     if (error.response && error.response.status === 401) {
         throw new Error('Unauthorized!');

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import "../theme/canvas.css";
 import { addPoint, fetchPointsWithToken } from "../api";
 import { useDispatch, useSelector } from "react-redux";

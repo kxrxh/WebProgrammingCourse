@@ -44,6 +44,7 @@ public class AppUser implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Point> points;
 
+
     private String roles;
 
 }
