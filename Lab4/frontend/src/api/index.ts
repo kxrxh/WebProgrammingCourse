@@ -1,12 +1,14 @@
+import axios from 'axios';
+
 export type TableRow = {
     x: number,
     y: number,
-    r: number
+    r: number,
     hit: boolean,
     time: number
 }
 
-const HOST_URL = 'https://kxrxhlab4.fly.dev/';
+const HOST_URL = 'https://kxrxhlab4.fly.dev';
 // const HOST_URL = 'http://localhost:8080';
 
 /**
@@ -20,21 +22,18 @@ const HOST_URL = 'https://kxrxhlab4.fly.dev/';
  */
 export async function fetchPointsWithToken(token: string, r: number): Promise<any> {
     const url = `${HOST_URL}/api/points?r=${r}`;
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        }
-    });
 
-    if (!response.ok) {
-        if (response.status === 401) {
-            throw new Error('Unauthorized!');
-        }
-        throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+        const response = await axios.get(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        handleErrorResponse(error);
     }
-
-    return await response.json();
 }
 
 /**
@@ -49,79 +48,70 @@ export async function fetchPointsWithToken(token: string, r: number): Promise<an
  */
 export async function addPoint(token: string, x: number, y: number, r: number): Promise<any> {
     const url = `${HOST_URL}/api/points?x=${x}&y=${y}&r=${r}`;
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-    });
 
-    if (!response.ok) {
-        if (response.status === 401) {
-            throw new Error('Unauthorized!');
-        }
-        throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+        const response = await axios.post(url, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        handleErrorResponse(error);
     }
-
-    return await response.json();
 }
 
 export async function loginToAccount(username: string, password: string): Promise<any> {
     const url = `${HOST_URL}/auth/login`;
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: username, password: password })
-    });
 
-    if (!response.ok) {
-        if (response.status === 401) {
-            throw new Error('Unauthorized!');
-        }
-        throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+        const response = await axios.post(url, {
+            username: username,
+            password: password
+        });
+
+        return response.data;
+    } catch (error) {
+        handleErrorResponse(error);
     }
-
-    return await response.json();
 }
-
 
 export async function registerNewAccount(username: string, password: string): Promise<any> {
     const url = `${HOST_URL}/auth/register`;
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username: username, password: password })
-    });
 
-    if (!response.ok) {
-        if (response.status === 401) {
-            throw new Error('Unauthorized!');
-        }
-        throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+        const response = await axios.post(url, {
+            username: username,
+            password: password
+        });
+
+        return response.data;
+    } catch (error) {
+        handleErrorResponse(error);
     }
-
-    return await response.json();
 }
 
 export async function clearRecords(token: string, r: number): Promise<any> {
     const url = `${HOST_URL}/api/points?r=${r}`;
-    const response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
 
-    if (!response.ok) {
-        if (response.status === 401) {
-            throw new Error('Unauthorized!');
-        }
-        throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+        const response = await axios.delete(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        handleErrorResponse(error);
     }
+}
 
-    return await response.json();
+function handleErrorResponse(error: any) {
+    if (error.response && error.response.status === 401) {
+        throw new Error('Unauthorized!');
+    } else {
+        throw new Error(`HTTP error! status: ${error.response ? error.response.status : 'unknown'}`);
+    }
 }

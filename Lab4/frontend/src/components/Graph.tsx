@@ -151,7 +151,7 @@ function Graph({ rValue, updateTable, forceUpdate }: any) {
       const points: GraphData = data['points'];
       points.forEach((point) => {
         const [dx, dy] = toGraphCoords(point.x, point.y, point.r);
-        drawPoint(dx, dy, point.hit ? "#00ff00" : "#ff0000");
+        drawPoint(dx, dy, point.hit ? "#2dd36f" : "#3dc2ff");
       });
     })
   }

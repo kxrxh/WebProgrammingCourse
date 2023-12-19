@@ -24,6 +24,12 @@ function MainPage() {
   const contentRef = useRef<HTMLIonContentElement>(null);
   const token = useSelector((state: any) => state.user.token);
 
+  useEffect(() => {
+    if (token) {
+      updateTable();
+      setForceUpdateGraph((prev) => !prev);
+    }
+  }, [token])
   /**
    * Asynchronously updates the table with new data points.
    * Fetches points using the provided token and rInput value,
@@ -63,19 +69,6 @@ function MainPage() {
   const showAlert = (msg: string) => {
     setMessage(msg);
     setIsOpen(true);
-  };
-
-  const handleScroll = (event: CustomEvent) => {
-    const scrollTop = event.detail.scrollTop;
-
-    // Check if the user is at the top of the page
-    const isAtTop = scrollTop === 0;
-
-    // Set the visibility of IonFab based on the scroll position
-    const fabButton = document.getElementById('fab-button');
-    if (fabButton) {
-      fabButton.style.visibility = isAtTop ? 'hidden' : 'visible';
-    }
   };
 
   const onPushClick = async () => {
